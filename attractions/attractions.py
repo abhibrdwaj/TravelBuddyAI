@@ -1,26 +1,25 @@
 import os
-from dotenv import load_dotenv
 import requests
+from dotenv import load_dotenv
+import json
 
-# Load .env file
+# Load API key from .env
 load_dotenv()
-
-# Now retrieve the API key
 GNEWS_API_KEY = os.getenv("GNEWS_API_KEY")
 
 if not GNEWS_API_KEY:
     raise ValueError("❌ GNEWS_API_KEY is missing. Check your .env file.")
 
-def get_nyc_tourism_news_gnews(max_results=20):
-    query = "New York City OR NYC AND tourists OR events OR restaurants OR attractions"
-    url = "https://gnews.io/api/v4/search"
+def get_tourism_related_news(max_results=10):
+    # Example query - you can tweak keywords as needed
+    query = "New York City OR NYC AND tourists OR events OR restaurants OR attractions OR museums"
 
+    url = "https://gnews.io/api/v4/search"
     params = {
         "category": "entertainment",
         "q": query,
         "lang": "en",
         "country": "us",
-        "page":2,
         "max": max_results,
         "apikey": GNEWS_API_KEY
     }
@@ -29,16 +28,20 @@ def get_nyc_tourism_news_gnews(max_results=20):
     data = response.json()
 
     if response.status_code != 200:
-        print(f"❌ Error {response.status_code}: {data.get('message', data)}")
-        return
+        return {"error": f"Request failed with status {response.status_code}", "details": data}
 
     articles = data.get("articles", [])
-    print(f"\n🗽 Top {len(articles)} NYC Tourism News Articles from GNews:\n")
+
+    # Transform into headline + content JSON only
+    results = []
     for article in articles:
-        print(f"📰 {article['title']}")
-        print(f"📝 {article['description']}")
-        print(f"🔗 {article['url']}")
-        print("-" * 100)
+        results.append({
+            "headline": article.get("title", ""),
+            "content": article.get("content", "")
+        })
+
+    return {"total_results": len(results), "articles": results}
 
 if __name__ == "__main__":
-    get_nyc_tourism_news_gnews()
+    news_json = get_tourism_related_news(max_results=10)
+    print(json.dumps(news_json, indent=4))
