@@ -9,6 +9,7 @@ def create_itinerary():
     end_location = data.get('end_location')
     mode_of_transport = data.get('mode_of_transport')
     start_time = data.get('start_time')
+    end_time = data.get('end_time')
     trip_duration = data.get('trip_duration')
     wheelchair_accessible = data.get('wheelchair_accessible')
 
@@ -19,6 +20,7 @@ def create_itinerary():
         'end_location': end_location,
         'mode_of_transport': mode_of_transport,
         'start_time': start_time,
+        'end_time': end_time,
         'trip_duration': trip_duration,
         'wheelchair_accessible': wheelchair_accessible
     }

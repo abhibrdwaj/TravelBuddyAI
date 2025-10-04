@@ -6,6 +6,7 @@ const InputPage = () => {
     const [endLocation, setEndLocation] = useState('');
     const [transportMode, setTransportMode] = useState(['subways']);
     const [startTime, setStartTime] = useState(new Date().toISOString().slice(0, 16));
+    const [endTime, setEndTime] = useState('');
     const [tripDuration, setTripDuration] = useState('');
     const [wheelchairAccessible, setWheelchairAccessible] = useState(false);
     
@@ -20,6 +21,7 @@ const InputPage = () => {
             endLocation,
             transportMode,
             startTime,
+            endTime,
             tripDuration,
             wheelchairAccessible,
         };
@@ -209,11 +211,22 @@ const InputPage = () => {
                     />
                 </label>
                 <label>
-                    Trip Duration (in minutes):
+                    Trip Duration (in hours):
                     <input
                         type="number"
+                        min="0"
+                        step="0.5"
                         value={tripDuration}
                         onChange={(e) => setTripDuration(e.target.value)}
+                        placeholder="e.g. 2.5"
+                    />
+                </label>
+                <label>
+                    End Time (optional):
+                    <input
+                        type="datetime-local"
+                        value={endTime}
+                        onChange={(e) => setEndTime(e.target.value)}
                     />
                 </label>
                 <label>
