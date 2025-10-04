@@ -1,0 +1,43 @@
+{
+  "itinerary": [
+    {
+      "location_name": "Bryant Park",
+      "address": "New York, NY 10018",
+      "latitude": 40.7536,
+      "longitude": -73.9832,
+      "start_time": "2025-10-04T19:00:00",
+      "end_time": "2025-10-04T20:00:00",
+      "event_type": "event",
+      "event_description": "Japanese food street happening today",
+      "news_source": "nycfoodnews.com",
+      "is_top_priority": true,
+      "is_alternate": false
+    },
+    {
+      "location_name": "Empire State Building",
+      "address": "20 W 34th St, New York, NY 10001",
+      "latitude": 40.7484,
+      "longitude": -73.9857,
+      "start_time": "2025-10-04T20:30:00",
+      "end_time": "2025-10-04T21:30:00",
+      "event_type": "attraction",
+      "event_description": "Night view special event",
+      "news_source": "nycevents.com",
+      "is_top_priority": false,
+      "is_alternate": true
+    },
+    {
+      "location_name": "Wall Street",
+      "address": "Wall St, New York, NY 10005",
+      "latitude": 40.7075,
+      "longitude": -74.0113,
+      "start_time": "2025-10-04T22:00:00",
+      "end_time": "2025-10-04T23:00:00",
+      "event_type": "landmark",
+      "event_description": "Historic financial district walk",
+      "news_source": "nycwalks.com",
+      "is_top_priority": false,
+      "is_alternate": false
+    }
+  ]
+}

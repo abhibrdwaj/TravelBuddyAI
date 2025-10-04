@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../styles/InputPage.css';
+import LoadingScreen from './LoadingScreen';
 
-const InputPage = () => {
+const InputPage = ({ onPlanItinerary }) => {
     const [startLocation, setStartLocation] = useState('');
     const [endLocation, setEndLocation] = useState('');
     const [transportMode, setTransportMode] = useState(['subways']);
@@ -9,6 +10,7 @@ const InputPage = () => {
     const [endTime, setEndTime] = useState('');
     const [tripDuration, setTripDuration] = useState('');
     const [wheelchairAccessible, setWheelchairAccessible] = useState(false);
+    const [loading, setLoading] = useState(false);
     
     const startLocationRef = useRef(null);
     const endLocationRef = useRef(null);
@@ -16,6 +18,7 @@ const InputPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         const data = {
             startLocation,
             endLocation,
@@ -26,7 +29,7 @@ const InputPage = () => {
             wheelchairAccessible,
         };
 
-        const response = await fetch('http://localhost:5000/api/itinerary', {
+        const response = await fetch('http://127.0.0.1:5000/api/itinerary', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -36,8 +39,11 @@ const InputPage = () => {
 
         if (response.ok) {
             const result = await response.json();
+            setLoading(false);
             console.log('Success:', result);
+            if (onPlanItinerary) onPlanItinerary();
         } else {
+            setLoading(false);
             console.error('Error:', response.statusText);
         }
     };
@@ -157,88 +163,97 @@ const InputPage = () => {
         });
     };
 
+    // Persist transportMode to localStorage
+    useEffect(() => {
+        localStorage.setItem('transitModes', JSON.stringify(transportMode));
+    }, [transportMode]);
+
     return (
         <div className="input-page">
             <h1>TravelBuddyAI</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Start Location:
-                    <div className="location-input-container">
+            {loading ? (
+                <LoadingScreen />
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Start Location:
+                        <div className="location-input-container">
+                            <input
+                                ref={startLocationRef}
+                                type="text"
+                                value={startLocation}
+                                onChange={(e) => setStartLocation(e.target.value)}
+                                placeholder="Search for a location..."
+                                required
+                            />
+                            <button type="button" onClick={handleGetLocation} className="location-btn">
+                                Use Current Location
+                            </button>
+                        </div>
+                    </label>
+                    <label>
+                        End Location:
                         <input
-                            ref={startLocationRef}
+                            ref={endLocationRef}
                             type="text"
-                            value={startLocation}
-                            onChange={(e) => setStartLocation(e.target.value)}
-                            placeholder="Search for a location..."
-                            required
+                            value={endLocation}
+                            onChange={(e) => setEndLocation(e.target.value)}
+                            placeholder="Search for destination..."
                         />
-                        <button type="button" onClick={handleGetLocation} className="location-btn">
-                            Use Current Location
-                        </button>
-                    </div>
-                </label>
-                <label>
-                    End Location:
-                    <input
-                        ref={endLocationRef}
-                        type="text"
-                        value={endLocation}
-                        onChange={(e) => setEndLocation(e.target.value)}
-                        placeholder="Search for destination..."
-                    />
-                </label>
-                <label>
-                    Mode of Transport:
-                    <div className="transport-mode-container">
-                        {['subways', 'buses', 'taxis', 'e-bikes', 'walking'].map((mode) => (
-                            <label key={mode} className="checkbox-label">
-                                <input
-                                    type="checkbox"
-                                    checked={transportMode.includes(mode)}
-                                    onChange={() => handleTransportModeChange(mode)}
-                                />
-                                {mode.charAt(0).toUpperCase() + mode.slice(1)}
-                            </label>
-                        ))}
-                    </div>
-                </label>
-                <label>
-                    Start Time:
-                    <input
-                        type="datetime-local"
-                        value={startTime}
-                        onChange={(e) => setStartTime(e.target.value)}
-                    />
-                </label>
-                <label>
-                    Trip Duration (in hours):
-                    <input
-                        type="number"
-                        min="0"
-                        step="0.5"
-                        value={tripDuration}
-                        onChange={(e) => setTripDuration(e.target.value)}
-                        placeholder="e.g. 2.5"
-                    />
-                </label>
-                <label>
-                    End Time (optional):
-                    <input
-                        type="datetime-local"
-                        value={endTime}
-                        onChange={(e) => setEndTime(e.target.value)}
-                    />
-                </label>
-                <label>
-                    Wheelchair Accessible:
-                    <input
-                        type="checkbox"
-                        checked={wheelchairAccessible}
-                        onChange={(e) => setWheelchairAccessible(e.target.checked)}
-                    />
-                </label>
-                <button type="submit">Plan Itinerary</button>
-            </form>
+                    </label>
+                    <label>
+                        Mode of Transport:
+                        <div className="transport-mode-container">
+                            {['subways', 'buses', 'taxis', 'e-bikes', 'walking'].map((mode) => (
+                                <label key={mode} className="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={transportMode.includes(mode)}
+                                        onChange={() => handleTransportModeChange(mode)}
+                                    />
+                                    {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                                </label>
+                            ))}
+                        </div>
+                    </label>
+                    <label>
+                        Start Time:
+                        <input
+                            type="datetime-local"
+                            value={startTime}
+                            onChange={(e) => setStartTime(e.target.value)}
+                        />
+                    </label>
+                    <label>
+                        Trip Duration (in hours):
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.5"
+                            value={tripDuration}
+                            onChange={(e) => setTripDuration(e.target.value)}
+                            placeholder="e.g. 2.5"
+                        />
+                    </label>
+                    <label>
+                        End Time (optional):
+                        <input
+                            type="datetime-local"
+                            value={endTime}
+                            onChange={(e) => setEndTime(e.target.value)}
+                        />
+                    </label>
+                    <label>
+                        Wheelchair Accessible:
+                        <input
+                            type="checkbox"
+                            checked={wheelchairAccessible}
+                            onChange={(e) => setWheelchairAccessible(e.target.checked)}
+                        />
+                    </label>
+                    <button type="submit">Plan Itinerary</button>
+                </form>
+            )}
         </div>
     );
 };
