@@ -1,6 +1,7 @@
 Flask==2.1.2
 Flask-Cors==3.0.10
 geopy==2.2.0
+<<<<<<< Updated upstream
 python-dotenv
 annotated-types==0.7.0
 anyio==4.11.0
@@ -63,3 +64,8 @@ urllib3==2.5.0
 xxhash==3.6.0
 zstandard==0.25.0
 werkzeug==3.0.2
+=======
+requests
+python-dotenv
+elevenlabs
+>>>>>>> Stashed changes
