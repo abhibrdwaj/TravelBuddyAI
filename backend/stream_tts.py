@@ -1,43 +1,85 @@
 # stream_tts.py
-from flask import Flask, request, send_file, jsonify
+from flask import Blueprint, request, send_file, jsonify
+import io
 import os
-import tempfile
-from elevenlabs import generate, save
+import requests
+from dotenv import load_dotenv
 
-app = Flask(__name__)
+load_dotenv()
 
-@app.route('/stream-tts', methods=['POST'])
-def stream_tts():
-    try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"error": "No JSON data provided"}), 400
+ELEVENLABS_API_KEY = os.getenv("ELEVEN_LABS_API")
+VOICE_ID = "EXAVITQu4vr4xnSDxMaL"  # Rachel voice
 
-        itinerary_text = data.get("itinerary")
-        if not itinerary_text:
-            return jsonify({"error": "Missing 'itinerary' field"}), 400
+tts_app = Blueprint("tts", __name__)
 
-        # Generate speech
-        audio = generate(
-            text=itinerary_text,
-            voice="Rachel",
-            model="eleven_multilingual_v2",
-            stream=False,
-            # Adjust speed here
-            voice_settings={"stability": 0.5, "similarity_boost": 0.75, "style": 0.3, "speaking_rate": 0.85}
-        )
+def generate_itinerary_script(base_plan):
+    """Generate spoken text from itinerary JSON."""
+    legs = base_plan.get("legs", [])
+    assumptions = base_plan.get("assumptions", [])
 
-        # Save to temporary file
-        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
-        save(audio, temp_file.name)
+    lines = ["Here is your planned itinerary for the day:\n"]
 
-        return send_file(temp_file.name, mimetype="audio/mpeg", as_attachment=False)
+    if assumptions:
+        lines.append("Assumptions for this plan include: ")
+        for a in assumptions:
+            lines.append(f"- {a}")
+        lines.append("\n")
 
-    except Exception as e:
-        print("TTS Error:", e)
-        return jsonify({"error": str(e)}), 500
+    for leg in legs:
+        sequence = leg.get("sequence", "?")
+        mode = leg.get("mode", "activity").capitalize()
+        from_loc = leg.get("fromLocation", "Unknown start")
+        to_loc = leg.get("toLocation", "Unknown destination")
+        depart = leg.get("departTime", "Unknown time")
+        arrive = leg.get("arriveTime", "Unknown time")
+        reason = leg.get("choiceReasoning", "")
 
+        lines.append(f"Leg {sequence}:")
+        lines.append(f"{mode} from {from_loc} departing at {depart}, to {to_loc}, arriving at {arrive}.")
+        if reason:
+            lines.append(f"Reason: {reason}")
+        lines.append("\n")
 
-if __name__ == '__main__':
-    # You can run this separately on a different port if needed
-    app.run(port=5001, debug=True)
+    return " ".join(lines)
+
+@tts_app.route("/stream-itinerary", methods=["POST"])
+def stream_itinerary_tts():
+    data = request.json
+    base_plan = data.get("base_plan")
+    if not base_plan:
+        return jsonify({"error": "base_plan missing"}), 400
+
+    # Generate text script
+    text = generate_itinerary_script(base_plan)
+
+    # Call Eleven Labs TTS API
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{VOICE_ID}/stream"
+    headers = {
+        "xi-api-key": ELEVENLABS_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "audio/mpeg"
+    }
+    payload = {
+        "text": text,
+        "model_id": "eleven_multilingual_v2",
+        "voice_settings": {
+            "stability": 0.6,
+            "similarity_boost": 0.85,
+            "speed": 0.85  # slower speech
+        }
+    }
+
+    response = requests.post(url, headers=headers, json=payload, stream=True)
+    if response.status_code != 200:
+        return jsonify({"error": f"TTS failed: {response.status_code} {response.text}"}), 500
+
+    audio_bytes = io.BytesIO(response.content)
+    audio_bytes.seek(0)
+
+    # Return audio inline (not as attachment)
+    return send_file(
+        audio_bytes,
+        mimetype="audio/mpeg",
+        as_attachment=False,  # Important! Inline playback
+        download_name="itinerary.mp3"
+    )

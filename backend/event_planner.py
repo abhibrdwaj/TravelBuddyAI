@@ -71,7 +71,7 @@ class Itinerary(BaseModel):
     legs: List[Leg]
 
 # Gemini LLM setup
-api_key = os.environ.get("GOOGLE_API_KEY")
+api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     raise RuntimeError("GOOGLE_API_KEY not FOUND.")
 

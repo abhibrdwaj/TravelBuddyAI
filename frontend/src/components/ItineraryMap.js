@@ -7,7 +7,10 @@ const ItineraryMap = ({ itineraryResult }) => {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
-  const itinerary = itineraryResult.base_plan.legs;
+  const [isReading, setIsReading] = useState(false);
+
+  const itinerary = itineraryResult?.base_plan?.legs || [];
+  const dummyData = itineraryResult; // Use the passed itineraryResult directly
 
   // Load Google Maps script if not already loaded
   useEffect(() => {
@@ -26,8 +29,8 @@ const ItineraryMap = ({ itineraryResult }) => {
   useEffect(() => {
     if (!scriptLoaded || !window.google || !window.google.maps || !mapRef.current || !itinerary.length) return;
 
-    // Helper to get lat/lng from address
-    function geocodeAddress(address) {
+    // Helper: geocode address
+    const geocodeAddress = (address) => {
       return new Promise((resolve, reject) => {
         if (!window.google || !window.google.maps) {
           reject('Google Maps JS API not loaded.');
@@ -43,10 +46,10 @@ const ItineraryMap = ({ itineraryResult }) => {
           }
         });
       });
-    }
+    };
 
-    // Center on first location using geocoding
-    geocodeAddress(itinerary[0].fromLocation).then(center => {
+    // Initialize map centered at first location
+    geocodeAddress(itinerary[0].fromLocation).then(async (center) => {
       const mapInstance = new window.google.maps.Map(mapRef.current, {
         zoom: 13,
         center,
@@ -54,116 +57,121 @@ const ItineraryMap = ({ itineraryResult }) => {
         streetViewControl: false,
       });
 
-      // Helper to get lat/lng from address (already defined above)
+      // Place markers
       let i = 0;
-      Promise.all(itinerary.map(item => {
-        let itStop = item.fromLocation == item.toLocation;
-        if (itStop) return null;
-        // Get lat/lng from address
-        return geocodeAddress(item.fromLocation).then(({ lat, lng }) => ({ item, lat, lng }));
-      })).then(markerDataArr => {
-        markerDataArr.forEach((data, idx) => {
-          if (!data) return;
-          const { item, lat, lng } = data;
-          const marker = new window.google.maps.Marker({
-            position: { lat, lng },
-            map: mapInstance,
-            label: `${i + 1}`,
-            title: item.fromLocation,
-          });
-          i++;
+      const markerDataArr = await Promise.all(
+        itinerary.map(async (item) => {
+          if (item.fromLocation === item.toLocation) return null;
+          const { lat, lng } = await geocodeAddress(item.fromLocation);
+          return { item, lat, lng };
+        })
+      );
 
-          // Format ISO time to readable format
-          function formatTime(iso) {
-            if (!iso) return '';
-            const d = new Date(iso);
-            if (isNaN(d.getTime())) return iso;
-            return d.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
-          }
-          const infoWindow = new window.google.maps.InfoWindow({
-            content: `<div>
-              ${item.departTime || item.departureTime ? `<span style='color:#4a90e2;font-weight:500;'>Departs: ${formatTime(item.departTime || item.departureTime)}</span><br/>` : ''}
-              ${item.arriveTime || item.arrivalTime ? `<span style='color:#4a90e2;font-weight:500;'>Arrives: ${formatTime(item.arriveTime || item.arrivalTime)}</span><br/>` : ''}
-              <strong>${item.fromLocation}</strong><br/>
-              <span style='color:#388e3c;font-size:0.98em;'>${item.choiceReasoning || ''}</span>
-              ${item.accessibilityNotes ? `<br/><span style='color:#4a90e2;font-size:0.95em;'>${item.accessibilityNotes}</span>` : ''}
-            </div>`
-          });
-          marker.addListener('click', () => infoWindow.open(mapInstance, marker));
+      markerDataArr.forEach((data) => {
+        if (!data) return;
+        const { item, lat, lng } = data;
+
+        const marker = new window.google.maps.Marker({
+          position: { lat, lng },
+          map: mapInstance,
+          label: `${i + 1}`,
+          title: item.fromLocation,
         });
+        i++;
+
+        const formatTime = (iso) => {
+          if (!iso) return '';
+          const d = new Date(iso);
+          return isNaN(d.getTime()) ? iso : d.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+        };
+
+        const infoWindow = new window.google.maps.InfoWindow({
+          content: `<div>
+            ${item.departTime ? `<span style='color:#4a90e2;font-weight:500;'>Departs: ${formatTime(item.departTime)}</span><br/>` : ''}
+            ${item.arriveTime ? `<span style='color:#4a90e2;font-weight:500;'>Arrives: ${formatTime(item.arriveTime)}</span><br/>` : ''}
+            <strong>${item.fromLocation}</strong><br/>
+            <span style='color:#388e3c;font-size:0.98em;'>${item.choiceReasoning || ''}</span>
+            ${item.accessibilityNotes ? `<br/><span style='color:#4a90e2;font-size:0.95em;'>${item.accessibilityNotes}</span>` : ''}
+          </div>`
+        });
+
+        marker.addListener('click', () => infoWindow.open(mapInstance, marker));
       });
 
-      // Request and render transit directions for each leg
-      (async () => {
-        for (let i = 0; i < itinerary.length - 1; i++) {
-          // Get origin and destination lat/lng from address
-          const origin = await geocodeAddress(itinerary[i].fromLocation);
-          const destination = await geocodeAddress(itinerary[i + 1].fromLocation);
-          const ds = new window.google.maps.DirectionsService();
-          const dr = new window.google.maps.DirectionsRenderer({
-            map: mapInstance,
-            suppressMarkers: true,
-            preserveViewport: false,
-            polylineOptions: { strokeWeight: 6, strokeColor: '#4285F4' }
-          });
-          if (itinerary[i].mode !== 'walk' && itinerary[i].mode !== 'subway') continue;
-          let travelMode = (itinerary[i].mode == 'walk') ? 'WALKING' : 'TRANSIT';
-          ds.route(
-            {
-              origin,
-              destination,
-              travelMode: window.google.maps.TravelMode[travelMode],
-              ...(travelMode === 'TRANSIT' ? {
-                transitOptions: {
-                  modes: [window.google.maps.TransitMode.SUBWAY]
-                }
-              } : {})
-            },
-            (res, status) => {
-              if (status !== 'OK' || !res || !res.routes || !res.routes.length) return;
-              const routeToShow = res.routes[0];
-              // Validate routeToShow structure
-              if (
-                routeToShow &&
-                Array.isArray(routeToShow.legs) &&
-                routeToShow.legs.length > 0 &&
-                routeToShow.legs.every(leg =>
-                  Array.isArray(leg.steps) &&
-                  leg.steps.every(s => typeof s.travel_mode === 'string')
-                )
-              ) {
-                dr.setDirections({
-                  geocoded_waypoints: res.geocoded_waypoints,
-                  routes: [routeToShow],
-                  request: {
-                    origin,
-                    destination,
-                    travelMode: travelMode,
-                    ...(travelMode === 'TRANSIT' ? {
-                      transitOptions: {
-                        modes: [window.google.maps.TransitMode.SUBWAY]
-                      }
-                    } : {})
-                  }
-                });
-              } else {
-                console.error('Invalid route structure:', routeToShow);
-              }
-            }
-          );
-        }
-      })();
+      // Render transit directions
+      for (let i = 0; i < itinerary.length - 1; i++) {
+        const origin = await geocodeAddress(itinerary[i].fromLocation);
+        const destination = await geocodeAddress(itinerary[i + 1].fromLocation);
+
+        const ds = new window.google.maps.DirectionsService();
+        const dr = new window.google.maps.DirectionsRenderer({
+          map: mapInstance,
+          suppressMarkers: true,
+          preserveViewport: false,
+          polylineOptions: { strokeWeight: 6, strokeColor: '#4285F4' },
+        });
+
+        let travelMode = (itinerary[i].mode === 'walk') ? 'WALKING' : 'TRANSIT';
+        if (itinerary[i].mode !== 'walk' && itinerary[i].mode !== 'subway') continue;
+
+        ds.route(
+          {
+            origin,
+            destination,
+            travelMode: window.google.maps.TravelMode[travelMode],
+            ...(travelMode === 'TRANSIT'
+              ? { transitOptions: { modes: [window.google.maps.TransitMode.SUBWAY] } }
+              : {}),
+          },
+          (res, status) => {
+            if (status !== 'OK' || !res?.routes?.length) return;
+            dr.setDirections(res);
+          }
+        );
+      }
 
       setMap(mapInstance);
     });
   }, [scriptLoaded, itinerary]);
+
+  // Handle Read Itinerary button
+  const handleReadItinerary = async () => {
+    try {
+      setIsReading(true);
+      const response = await fetch('http://localhost:5000/tts/stream-itinerary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base_plan: dummyData.base_plan }),
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch TTS audio');
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.onended = () => setIsReading(false);
+      audio.play();
+    } catch (err) {
+      console.error(err);
+      setIsReading(false);
+    }
+  };
 
   return (
     <div className="itinerary-map-container">
       {!scriptLoaded ? (
         <div className="map-loading">Loading map and itinerary...</div>
       ) : (
-        <div ref={mapRef} className="map" />
+        <>
+          <div ref={mapRef} className="map" />
+          <button
+            onClick={handleReadItinerary}
+            disabled={isReading}
+            style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 10 }}
+          >
+            {isReading ? 'Reading...' : 'Read Itinerary'}
+          </button>
+        </>
       )}
     </div>
   );
