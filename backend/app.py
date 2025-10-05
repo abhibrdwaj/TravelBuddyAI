@@ -27,8 +27,8 @@ def create_itinerary():
         json.dump(data, f)
 
     base_plan = plan_trip(json.dumps(data))
-    # weather_overlay = build_weather_overlay_by_place(json.dumps(data), base_plan)
-    # crime_overlay = build_crime_overlay_by_place(json.dumps(data), base_plan)
+    weather_overlay = build_weather_overlay_by_place(json.dumps(data), base_plan)
+    crime_overlay = build_crime_overlay_by_place(json.dumps(data), base_plan)
 
     return {"base_plan": base_plan.model_dump(),
             "weather_overlay": {},
