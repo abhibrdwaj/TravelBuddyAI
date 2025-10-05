@@ -8,6 +8,8 @@ const ItineraryMap = ({ itineraryResult }) => {
   const [map, setMap] = useState(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const itinerary = itineraryResult.base_plan.legs;
+  const weather = itineraryResult.weather_overlay.legs;
+  const crime = itineraryResult.crime_overlay.legs;
 
   // Load Google Maps script if not already loaded
   useEffect(() => {
@@ -80,6 +82,15 @@ const ItineraryMap = ({ itineraryResult }) => {
             if (isNaN(d.getTime())) return iso;
             return d.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
           }
+
+          // Get overlays for this stop (by idx)
+          const weatherOverlay = Array.isArray(weather) ? weather[i] : undefined;
+          const crimeOverlay = Array.isArray(crime) ? crime[i] : undefined;
+
+          // Extract departWeather and fromCrime
+          const departWeather = weatherOverlay && weatherOverlay.departWeather;
+          const fromCrime = crimeOverlay && crimeOverlay.fromCrime;
+
           const infoWindow = new window.google.maps.InfoWindow({
             content: `<div>
               ${item.departTime || item.departureTime ? `<span style='color:#4a90e2;font-weight:500;'>Departs: ${formatTime(item.departTime || item.departureTime)}</span><br/>` : ''}
@@ -87,6 +98,8 @@ const ItineraryMap = ({ itineraryResult }) => {
               <strong>${item.fromLocation}</strong><br/>
               <span style='color:#388e3c;font-size:0.98em;'>${item.choiceReasoning || ''}</span>
               ${item.accessibilityNotes ? `<br/><span style='color:#4a90e2;font-size:0.95em;'>${item.accessibilityNotes}</span>` : ''}
+              ${departWeather ? `<br/><span style='color:#e67e22;font-size:0.97em;'>Weather: ${typeof departWeather === 'object' ? JSON.stringify(departWeather) : departWeather}</span>` : ''}
+              ${fromCrime ? `<br/><span style='color:#c0392b;font-size:0.97em;'>Crime: ${typeof fromCrime === 'object' ? JSON.stringify(fromCrime) : fromCrime}</span>` : ''}
             </div>`
           });
           marker.addListener('click', () => infoWindow.open(mapInstance, marker));
