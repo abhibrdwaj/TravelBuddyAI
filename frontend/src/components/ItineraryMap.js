@@ -45,18 +45,35 @@ const ItineraryMap = () => {
     // Add markers and info windows
     let i = 0;
     itinerary.forEach((item, idx) => {
-        if (item.fromLocation == item.toLocation) return;
-        const marker = new window.google.maps.Marker({
-            position: { lat: item.fromLat, lng: item.fromLng },
-            map: mapInstance,
-            label: `${i + 1}`,
-            title: item.fromLocation,
-        });
-        i++;
-        const infoWindow = new window.google.maps.InfoWindow({
-            content: `<div><strong>${item.fromLocation}</strong>`
-        });
-        marker.addListener('click', () => infoWindow.open(mapInstance, marker));
+        let itStop = item.fromLocation == item.toLocation;
+        if (!itStop) {
+            const marker = new window.google.maps.Marker({
+                position: { lat: item.fromLat, lng: item.fromLng },
+                map: mapInstance,
+                label: `${i + 1}`,
+                title: item.fromLocation,
+            });
+            i++;
+
+            // Format ISO time to readable format
+            function formatTime(iso) {
+              if (!iso) return '';
+              const d = new Date(iso);
+              if (isNaN(d.getTime())) return iso;
+              return d.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+            }
+            const infoWindow = new window.google.maps.InfoWindow({
+                content: `<div>
+                  ${item.departTime || item.departureTime ? `<span style='color:#4a90e2;font-weight:500;'>Departs: ${formatTime(item.departTime || item.departureTime)}</span><br/>` : ''}
+                  ${item.arriveTime || item.arrivalTime ? `<span style='color:#4a90e2;font-weight:500;'>Arrives: ${formatTime(item.arriveTime || item.arrivalTime)}</span><br/>` : ''}
+                  <strong>${item.fromLocation}</strong><br/>
+                  <span style='color:#388e3c;font-size:0.98em;'>${item.choiceReasoning || ''}</span>
+                  ${item.accessibilityNotes ? `<br/><span style='color:#4a90e2;font-size:0.95em;'>${item.accessibilityNotes}</span>` : ''}
+                </div>`
+            });
+            marker.addListener('click', () => infoWindow.open(mapInstance, marker));
+
+        }
     });
 
     // Request and render transit directions for first leg
