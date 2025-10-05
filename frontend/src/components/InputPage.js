@@ -11,6 +11,9 @@ const InputPage = ({ onPlanItinerary }) => {
     const [tripDuration, setTripDuration] = useState('');
     const [wheelchairAccessible, setWheelchairAccessible] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [cuisines, setCuisines] = useState('');
+    const [dietPreferences, setDietPreferences] = useState('');
+    const [activityPreferences, setActivityPreferences] = useState('');
     
     const startLocationRef = useRef(null);
     const endLocationRef = useRef(null);
@@ -27,6 +30,9 @@ const InputPage = ({ onPlanItinerary }) => {
             endTime,
             tripDuration,
             wheelchairAccessible,
+            cuisines,
+            dietPreferences,
+            activityPreferences,
         };
 
         const response = await fetch('http://127.0.0.1:5000/api/itinerary', {
@@ -241,6 +247,33 @@ const InputPage = ({ onPlanItinerary }) => {
                             type="datetime-local"
                             value={endTime}
                             onChange={(e) => setEndTime(e.target.value)}
+                        />
+                    </label>
+                    <label>
+                        Cuisines (optional):
+                        <input
+                            type="text"
+                            value={cuisines}
+                            onChange={(e) => setCuisines(e.target.value)}
+                            placeholder="e.g. Italian, Chinese"
+                        />
+                    </label>
+                    <label>
+                        Diet Preferences (optional):
+                        <input
+                            type="text"
+                            value={dietPreferences}
+                            onChange={(e) => setDietPreferences(e.target.value)}
+                            placeholder="e.g. Vegetarian, Gluten-Free"
+                        />
+                    </label>
+                    <label>
+                        Activity Preferences (optional):
+                        <input
+                            type="text"
+                            value={activityPreferences}
+                            onChange={(e) => setActivityPreferences(e.target.value)}
+                            placeholder="e.g. Sightseeing, Hiking"
                         />
                     </label>
                     <label>
