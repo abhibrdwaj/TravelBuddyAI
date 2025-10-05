@@ -31,8 +31,8 @@ def create_itinerary():
     crime_overlay = build_crime_overlay_by_place(json.dumps(data), base_plan)
 
     return {"base_plan": base_plan.model_dump(),
-            "weather_overlay": weather_overlay,
-            "crime_overlay": crime_overlay}, 200
+            "weather_overlay": None,
+            "crime_overlay": None}, 200
 
 @app.route('/api/replan', methods=['POST'])
 def replan_itinerary():
