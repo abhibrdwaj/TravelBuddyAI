@@ -185,9 +185,9 @@ const InputPage = ({ onPlanItinerary }) => {
     return (
         <div className="input-page">
             <h1 className="input-title">
-                <FaMapMarkerAlt className="branding-icon" /> TravelBuddyAI
+                <FaMapMarkerAlt className="branding-icon" /> Voyalytics AI
             </h1>
-            <h2 className="input-subheader">Your sustainable budget friendly Travel Assistant</h2>
+            <h2 className="input-subheader">Voyage + Analytics: Your sustainable budget friendly Travel Assistant</h2>
             {loading ? (
                 <LoadingScreen />
             ) : (
