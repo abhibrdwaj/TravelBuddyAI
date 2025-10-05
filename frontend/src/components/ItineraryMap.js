@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/ItineraryMap.css';
 import dummyData from '../dummy_itinerary.json';
-import useDirections from '../hooks/useDirections';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBDnnTPHM5G7-HoKmR2-w1Mz_UBCn3cTBY'; // Replace with your key
 
@@ -58,9 +57,9 @@ const ItineraryMap = () => {
     });
 
     // Request and render transit directions for first leg
-    if (itinerary.length > 1) {
-      const origin = { lat: itinerary[0].latitude, lng: itinerary[0].longitude };
-      const dest = { lat: itinerary[1].latitude, lng: itinerary[1].longitude };
+    for (let i = 0; i < itinerary.length - 1; i++) {
+      const origin = { lat: itinerary[i].latitude, lng: itinerary[i].longitude };
+      const destination = { lat: itinerary[i + 1].latitude, lng: itinerary[i + 1].longitude };
       const ds = new window.google.maps.DirectionsService();
       const dr = new window.google.maps.DirectionsRenderer({
         map: mapInstance,
@@ -72,11 +71,11 @@ const ItineraryMap = () => {
       ds.route(
         {
           origin,
-          destination: dest,
+          destination,
           travelMode: 'TRANSIT',
           provideRouteAlternatives: true,
           transitOptions: {
-            modes: [window.google.maps.TransitMode.SUBWAY, window.google.maps.TransitMode.BUS],
+            modes: [window.google.maps.TransitMode.SUBWAY],
             routingPreference: window.google.maps.TransitRoutePreference.LESS_WALKING
           }
         },
@@ -107,10 +106,10 @@ const ItineraryMap = () => {
               routes: [routeToShow],
               request: {
                 origin,
-                destination: dest,
+                destination,
                 travelMode: window.google.maps.TravelMode.TRANSIT,
                 transitOptions: {
-                  modes: [window.google.maps.TransitMode.SUBWAY, window.google.maps.TransitMode.BUS],
+                  modes: [window.google.maps.TransitMode.SUBWAY],
                   routingPreference: window.google.maps.TransitRoutePreference.LESS_WALKING
                 }
               }
