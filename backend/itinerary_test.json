@@ -1,0 +1,205 @@
+{
+    "base_plan": {
+        "assumptions": [
+            "All listed subway stations and trains are wheelchair accessible.",
+            "MoMA PS1 and Joe's Shanghai are wheelchair accessible.",
+            "Joe's Shanghai offers suitable vegetarian options.",
+            "Travel times include reasonable buffer for waiting, walking to/from stations/venues, and transfers.",
+            "Museum and restaurant operating hours align with the itinerary."
+        ],
+        "legs": [
+            {
+                "accessibilityNotes": "42 St-Port Authority Bus Terminal (E train platforms) and Court Sq Station are wheelchair accessible. MoMA PS1 is a short, flat walk from the accessible Court Sq exit.",
+                "arriveTime": "2025-10-04T08:55:00",
+                "choiceReasoning": "Direct accessible subway route to fulfill museum activity preference. Includes buffer for transfers and walking, adhering to wheelchair accessibility needs.",
+                "costEstimateUSD": 2.9,
+                "departTime": "2025-10-04T08:15:00",
+                "estDurationMin": 40,
+                "fromLocation": "42 St-Port Authority Bus Terminal (E train), 625 8th Ave, New York, NY 10018",
+                "mode": "subway",
+                "sequence": 1,
+                "toLocation": "Court Sq Station (E train exit), Long Island City, NY 11101"
+            },
+            {
+                "accessibilityNotes": "MoMA PS1 is wheelchair accessible with elevators and ramps throughout the building.",
+                "arriveTime": "2025-10-04T10:10:00",
+                "choiceReasoning": "Fulfills the user's 'Museum' activity preference and wheelchair accessibility requirement. Allocated 1 hour 15 minutes for a focused visit to fit within the overall trip duration.",
+                "costEstimateUSD": 18.0,
+                "departTime": "2025-10-04T08:55:00",
+                "estDurationMin": 75,
+                "fromLocation": "MoMA PS1, 22-25 Jackson Ave, Long Island City, NY 11101",
+                "mode": "activity",
+                "sequence": 2,
+                "toLocation": "MoMA PS1, 22-25 Jackson Ave, Long Island City, NY 11101"
+            },
+            {
+                "accessibilityNotes": "The subway route via Court Sq (E) and Roosevelt Av-Jackson Hts (7) to Flushing-Main St (7) uses wheelchair accessible stations and trains. Joe's Shanghai is on a ground floor and should be accessible.",
+                "arriveTime": "2025-10-04T11:00:00",
+                "choiceReasoning": "Selected to fulfill 'Chinese' cuisine and 'Vegetarian' diet preferences, as Flushing offers the best options in Queens. This leg involves a transfer but uses accessible subway lines. Travel time adjusted to maximize activity time while staying within overall trip duration.",
+                "costEstimateUSD": 2.9,
+                "departTime": "2025-10-04T10:10:00",
+                "estDurationMin": 50,
+                "fromLocation": "MoMA PS1, 22-25 Jackson Ave, Long Island City, NY 11101",
+                "mode": "subway",
+                "sequence": 3,
+                "toLocation": "Joe's Shanghai, 136-21 37th Ave, Flushing, NY 11354"
+            },
+            {
+                "accessibilityNotes": "Restaurant is on the ground floor. It is generally wheelchair accessible, though it can be crowded. Please call ahead to confirm specific accessibility needs if required.",
+                "arriveTime": "2025-10-04T12:00:00",
+                "choiceReasoning": "Joe's Shanghai is a renowned Chinese restaurant with vegetarian options available, satisfying both cuisine and dietary preferences. Allocated 1 hour for a comfortable dining experience within the budget and time constraints.",
+                "costEstimateUSD": 35.0,
+                "departTime": "2025-10-04T11:00:00",
+                "estDurationMin": 60,
+                "fromLocation": "Joe's Shanghai, 136-21 37th Ave, Flushing, NY 11354",
+                "mode": "activity",
+                "sequence": 4,
+                "toLocation": "Joe's Shanghai, 136-21 37th Ave, Flushing, NY 11354"
+            },
+            {
+                "accessibilityNotes": "Short, flat walk from Joe's Shanghai to the accessible Flushing-Main Street Station entrance.",
+                "arriveTime": "2025-10-04T12:05:00",
+                "choiceReasoning": "The user's end location is 'Queens, NY, USA'. Ending the itinerary at Flushing-Main Street Station provides a specific, accessible point within Queens, fulfilling the request while keeping within the time window. This is a major transit hub in Queens.",
+                "costEstimateUSD": 0.0,
+                "departTime": "2025-10-04T12:00:00",
+                "estDurationMin": 5,
+                "fromLocation": "Joe's Shanghai, 136-21 37th Ave, Flushing, NY 11354",
+                "mode": "walk",
+                "sequence": 5,
+                "toLocation": "Flushing-Main Street Station, Flushing, NY 11354"
+            }
+        ],
+        "summary": "An accessible urban adventure from Times Square to Queens, featuring a modern art museum and authentic vegetarian-friendly Chinese cuisine, all within a 4-hour window.",
+        "totalEstCostUSD": 58.8,
+        "totalEstDurationMin": 230
+    },
+    "weather_overlay": {
+        "legWeather": [
+            {
+                "arriveTime": "2025-10-04T08:55:00",
+                "arriveWeather": {
+                    "condition": "Scattered Clouds",
+                    "humidity_pct": 76,
+                    "icon": "03n",
+                    "source": "openweathermap:q",
+                    "temp_c": 19.96,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 0.79
+                },
+                "departTime": "2025-10-04T08:15:00",
+                "departWeather": {
+                    "condition": "Scattered Clouds",
+                    "humidity_pct": 75,
+                    "icon": "03n",
+                    "source": "openweathermap:q",
+                    "temp_c": 19.94,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 1.27
+                },
+                "fromLocation": "42 St-Port Authority Bus Terminal (E train), 625 8th Ave, New York, NY 10018",
+                "sequence": 1,
+                "toLocation": "Court Sq Station (E train exit), Long Island City, NY 11101"
+            },
+            {
+                "arriveTime": "2025-10-04T10:10:00",
+                "arriveWeather": {
+                    "condition": "Scattered Clouds",
+                    "humidity_pct": 76,
+                    "icon": "03n",
+                    "source": "openweathermap:q",
+                    "temp_c": 19.96,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 0.79
+                },
+                "departTime": "2025-10-04T08:55:00",
+                "departWeather": {
+                    "condition": "Scattered Clouds",
+                    "humidity_pct": 76,
+                    "icon": "03n",
+                    "source": "openweathermap:q",
+                    "temp_c": 19.96,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 0.79
+                },
+                "fromLocation": "MoMA PS1, 22-25 Jackson Ave, Long Island City, NY 11101",
+                "sequence": 2,
+                "toLocation": "MoMA PS1, 22-25 Jackson Ave, Long Island City, NY 11101"
+            },
+            {
+                "arriveTime": "2025-10-04T11:00:00",
+                "arriveWeather": {
+                    "condition": "Light Rain",
+                    "humidity_pct": 65,
+                    "icon": "10d",
+                    "source": "openweathermap:q",
+                    "temp_c": 13.83,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 12.75
+                },
+                "departTime": "2025-10-04T10:10:00",
+                "departWeather": {
+                    "condition": "Scattered Clouds",
+                    "humidity_pct": 76,
+                    "icon": "03n",
+                    "source": "openweathermap:q",
+                    "temp_c": 19.96,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 0.79
+                },
+                "fromLocation": "MoMA PS1, 22-25 Jackson Ave, Long Island City, NY 11101",
+                "sequence": 3,
+                "toLocation": "Joe's Shanghai, 136-21 37th Ave, Flushing, NY 11354"
+            },
+            {
+                "arriveTime": "2025-10-04T12:00:00",
+                "arriveWeather": {
+                    "condition": "Light Rain",
+                    "humidity_pct": 65,
+                    "icon": "10d",
+                    "source": "openweathermap:q",
+                    "temp_c": 13.83,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 12.75
+                },
+                "departTime": "2025-10-04T11:00:00",
+                "departWeather": {
+                    "condition": "Light Rain",
+                    "humidity_pct": 65,
+                    "icon": "10d",
+                    "source": "openweathermap:q",
+                    "temp_c": 13.83,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 12.75
+                },
+                "fromLocation": "Joe's Shanghai, 136-21 37th Ave, Flushing, NY 11354",
+                "sequence": 4,
+                "toLocation": "Joe's Shanghai, 136-21 37th Ave, Flushing, NY 11354"
+            },
+            {
+                "arriveTime": "2025-10-04T12:05:00",
+                "arriveWeather": {
+                    "condition": "Light Rain",
+                    "humidity_pct": 65,
+                    "icon": "10d",
+                    "source": "openweathermap:q",
+                    "temp_c": 13.83,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 12.75
+                },
+                "departTime": "2025-10-04T12:00:00",
+                "departWeather": {
+                    "condition": "Light Rain",
+                    "humidity_pct": 65,
+                    "icon": "10d",
+                    "source": "openweathermap:q",
+                    "temp_c": 13.83,
+                    "time": "2025-10-05T02:00:00",
+                    "wind_mps": 12.75
+                },
+                "fromLocation": "Joe's Shanghai, 136-21 37th Ave, Flushing, NY 11354",
+                "sequence": 5,
+                "toLocation": "Flushing-Main Street Station, Flushing, NY 11354"
+            }
+        ]
+    }
+}
