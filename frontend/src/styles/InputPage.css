@@ -1,3 +1,25 @@
+body, .App {
+  min-height: 100vh;
+  background: url('../assets/NYC.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/* Add a subtle overlay for readability */
+.App {
+  background: rgba(255,255,255,0.85);
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+/* Ensure all main containers have some background for contrast */
+.input-page, .input-form-card, .itinerary-map-container, .transit-options-container, .options-box {
+  background: rgba(255,255,255,0.97);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(44,62,80,0.09);
+}
+
 body {
     font-family: 'Inter', 'Segoe UI', 'Roboto', Arial, sans-serif;
     background-color: #f0f4f8;

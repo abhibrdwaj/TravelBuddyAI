@@ -3,8 +3,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 60vh;
+  height: 100vh;
   font-family: Arial, sans-serif;
+  background: url('../assets/NYC.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.loading-screen::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.85);
+  z-index: 0;
+}
+
+.loading-screen > * {
+  position: relative;
+  z-index: 1;
 }
 
 .spinner {

@@ -37,7 +37,9 @@ function App() {
   return (
     <div className="App">
       {step === 'input' && <InputPage onPlanItinerary={handlePlanItinerary} />}
-      {(step === 'loading' || loading) && <LoadingScreen />}
+      {(step === 'loading' || loading) && (
+        <LoadingScreen text={loading ? "optimized plan" : "initial plan"} />
+      )}
       {step === 'map' && itineraryResult && (
         <TransitAndMapView
           transitModes={transitModes}
