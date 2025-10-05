@@ -1,10 +1,10 @@
 import React from 'react';
 import '../styles/LoadingScreen.css';
 
-const LoadingScreen = () => (
+const LoadingScreen = ({ text = "itinerary" }) => (
   <div className="loading-screen">
     <div className="spinner"></div>
-    <p>Loading your optimized itinerary...</p>
+    <p>Loading your {text}...</p>
   </div>
 );
 

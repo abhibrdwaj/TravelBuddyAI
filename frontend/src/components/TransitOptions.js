@@ -43,11 +43,6 @@ const TransitOptions = ({ transitModes, itineraryResult }) => {
           </li>
         ))}
       </ul>
-      <button className="replan-btn" onClick={() => {
-        alert('Replan based on weather coming soon!');
-      }}>
-        Replan Based on Weather
-      </button>
     </div>
   );
 };
