@@ -9,8 +9,8 @@ const ItineraryMap = ({ itineraryResult }) => {
   const [map, setMap] = useState(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const itinerary = itineraryResult.base_plan.legs;
-  const weather = itineraryResult.weather_overlay.legs;
-  const crime = itineraryResult.crime_overlay.legs;
+  const weather = itineraryResult.weather_overlay.legWeather;
+  const crime = itineraryResult.crime_overlay.legCrime;
 
   // Load Google Maps script if not already loaded
   useEffect(() => {
