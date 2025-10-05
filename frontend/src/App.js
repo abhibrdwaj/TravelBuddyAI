@@ -3,7 +3,7 @@ import InputPage from './components/InputPage';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App body-center-wrapper">
       <InputPage />
     </div>
   );
