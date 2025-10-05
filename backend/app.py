@@ -13,6 +13,8 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+app.register_blueprint(tts_app, url_prefix='/tts')
+
 DATA_DIR = 'public'
 os.makedirs(DATA_DIR, exist_ok=True)
 
@@ -25,12 +27,12 @@ def create_itinerary():
         json.dump(data, f)
 
     base_plan = plan_trip(json.dumps(data))
-    weather_overlay = build_weather_overlay_by_place(json.dumps(data), base_plan)
-    crime_overlay = build_crime_overlay_by_place(json.dumps(data), base_plan)
+    # weather_overlay = build_weather_overlay_by_place(json.dumps(data), base_plan)
+    # crime_overlay = build_crime_overlay_by_place(json.dumps(data), base_plan)
 
     return {"base_plan": base_plan.model_dump(),
-            "weather_overlay": weather_overlay,
-            "crime_overlay": crime_overlay}, 200
+            "weather_overlay": {},
+            "crime_overlay": {}}, 200
 
 @app.route('/api/replan', methods=['POST'])
 def replan_itinerary():
