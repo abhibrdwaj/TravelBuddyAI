@@ -18,41 +18,45 @@ export default function useDirections(itinerary, transitModes) {
       const directionsService = new window.google.maps.DirectionsService();
       const legs = [];
       for (let i = 0; i < itinerary.length - 1; i++) {
-        const origin = itinerary[i].location_name || itinerary[i].address;
-        const destination = itinerary[i + 1].location_name || itinerary[i + 1].address;
-        let mode = 'TRANSIT';
-        let transitOptions = {};
-        if (transitModes.includes('walking')) mode = 'WALKING';
-        else if (transitModes.includes('taxis')) mode = 'DRIVING';
-        else if (transitModes.includes('e-bikes')) mode = 'BICYCLING';
-        else if (transitModes.includes('subways') || transitModes.includes('buses')) {
-          mode = 'TRANSIT';
-          const modesArr = [];
-          if (transitModes.includes('subways')) modesArr.push(window.google.maps.TransitMode.SUBWAY);
-          if (transitModes.includes('buses')) modesArr.push(window.google.maps.TransitMode.BUS);
-          if (modesArr.length > 0) transitOptions.modes = modesArr;
-        }
+        const origin = itinerary[i].fromLocation;
+        const destination = itinerary[i + 1].fromLocation;
+        if (itinerary[i].mode !== 'walk' && itinerary[i].mode !== 'subway') continue;
+        let travelMode = (itinerary[i].mode == 'walk') ? 'WALKING' : 'TRANSIT';
+        // Set drivingOptions with departureTime if available
+        const drivingOptions = itinerary[i].departTime ? {
+          departureTime: new Date(itinerary[i].departTime)
+        } : undefined;
         const request = {
           origin,
           destination,
-          travelMode: window.google.maps.TravelMode[mode],
-          ...(mode === 'TRANSIT' ? { transitOptions } : {})
+          travelMode: window.google.maps.TravelMode[travelMode],
+          ...(travelMode === 'TRANSIT' ? {
+            transitOptions: {
+              modes: [window.google.maps.TransitMode.SUBWAY]
+            }
+          } : {}),
+          ...(drivingOptions ? { drivingOptions } : {})
         };
         const getRoute = () => new Promise((resolve) => {
           directionsService.route(request, (result, status) => {
             if (status === 'OK' && result.routes.length > 0) {
               const summary = result.routes[0].legs[0];
               const steps = summary.steps.map((s) => {
-                let details = s.instructions;
+                let details = '';
+                details += s.instructions;
                 if (s.transit) {
-                  details += `<br/><span style='color:#4285F4;font-weight:bold;'>Transit: ${s.transit.line.name} (${s.transit.line.short_name || ''})</span>`;
-                  details += `<br/>From <b>${s.transit.departure_stop.name}</b> to <b>${s.transit.arrival_stop.name}</b>`;
-                  details += `<br/>Headsign: ${s.transit.headsign}`;
-                  details += `<br/>Vehicle: ${s.transit.line.vehicle.name}`;
-                  if (s.transit.line.color) details += `<span style='background:${s.transit.line.color};color:${s.transit.line.text_color};padding:2px 6px;border-radius:4px;margin-left:6px;'>${s.transit.line.short_name || s.transit.line.name}</span>`;
-                  if (result.routes[0].fare) {
-                    details += `<br/><span style='color:#388e3c;font-weight:bold;'>Fare: ${result.routes[0].fare.text}</span>`;
-                  }
+                    const transitTimes = s.transit.departure_time && s.transit.arrival_time
+                    ? `<br/><span style='color:#4a90e2;font-weight:bold;'>Departs: ${s.transit.departure_time.text} | Arrives: ${s.transit.arrival_time.text}</span>`
+                    : '';
+                    if (transitTimes) details += transitTimes;
+                    details += `<br/><span style='color:#4285F4;font-weight:bold;'>Transit: ${s.transit.line.name} (${s.transit.line.short_name || ''})</span>`;
+                    details += `<br/>From <b>${s.transit.departure_stop.name}</b> to <b>${s.transit.arrival_stop.name}</b>`;
+                    details += `<br/>Headsign: ${s.transit.headsign}`;
+                    details += `<br/>Vehicle: ${s.transit.line.vehicle.name}`;
+                    if (s.transit.line.color) details += `<span style='background:${s.transit.line.color};color:${s.transit.line.text_color};padding:2px 6px;border-radius:4px;margin-left:6px;'>${s.transit.line.short_name || s.transit.line.name}</span>`;
+                    if (result.routes[0].fare) {
+                        details += `<br/><span style='color:#388e3c;font-weight:bold;'>Fare: ${result.routes[0].fare.text}</span>`;
+                    }
                 }
                 return details;
               });
@@ -62,14 +66,14 @@ export default function useDirections(itinerary, transitModes) {
                 duration: summary.duration.text,
                 steps,
                 polyline: result.routes[0].overview_polyline,
-                transitMode: mode === 'TRANSIT' && transitOptions.modes ? transitOptions.modes.join(', ') : mode.toLowerCase(),
+                transitMode: travelMode,
                 startTime: summary.departure_time ? summary.departure_time.text : '',
                 endTime: summary.arrival_time ? summary.arrival_time.text : '',
                 distance: summary.distance ? summary.distance.text : '',
                 fare: result.routes[0].fare ? result.routes[0].fare.text : null
               });
             } else {
-              resolve({ origin, destination, error: 'No route found', transitMode: mode === 'TRANSIT' && transitOptions.modes ? transitOptions.modes.join(', ') : mode.toLowerCase() });
+              resolve({ origin, destination, error: 'No route found', transitMode: travelMode });
             }
           });
         });

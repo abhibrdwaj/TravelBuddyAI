@@ -1,35 +1,53 @@
 import React from 'react';
-import dummyData from '../dummy_itinerary.json';
 import useDirections from '../hooks/useDirections';
+import '../styles/TransitOptions.css'; // IGNORE
 
-const TransitOptions = ({ transitModes }) => {
-  // Fetch directions using the shared hook
-  const directionsData = useDirections(dummyData.itinerary, transitModes);
+const TransitOptions = ({ transitModes, itineraryResult }) => {
+  const directionsData = useDirections(itineraryResult.base_plan.legs, transitModes);
 
   return (
     <div className="transit-options-container">
-      <h2>Transit Options</h2>
-      <p>Preferred modes: {transitModes.length ? transitModes.join(', ') : 'None selected'}</p>
-      <ul>
-        {directionsData.length === 0 && <li>Loading routes...</li>}
+      <h2 className="transit-title">Transit Options</h2>
+      <div className="transit-modes-row">
+        <span className="transit-modes-label">Preferred modes:</span>
+        <span className="transit-modes-badges">
+          {transitModes.length ? transitModes.map((mode, i) => (
+            <span key={i} className={`transit-mode-badge transit-mode-${mode}`}>{mode.charAt(0).toUpperCase() + mode.slice(1)}</span>
+          )) : <span className="transit-mode-badge transit-mode-none">None selected</span>}
+        </span>
+      </div>
+      <ul className="transit-list">
+        {directionsData.length === 0 && <li className="transit-loading">Loading routes...</li>}
         {directionsData.map((route, idx) => (
-          <li key={idx}>
-            <strong>{route.origin}</strong> → <strong>{route.destination}</strong> via <em>{route.transitMode}</em><br />
+          <li key={idx} className="transit-leg-card">
+            <div className="transit-leg-header">
+              <span className="transit-leg-locations">
+                <strong>{route.origin}</strong>
+                <span className="transit-leg-arrow">→</span>
+                <strong>{route.destination}</strong>
+              </span>
+              <span className="transit-leg-mode">{route.transitMode}</span>
+            </div>
             {route.error ? (
-              <span style={{ color: 'red' }}>{route.error}</span>
+              <span className="transit-error">{route.error}</span>
             ) : (
-              <>
-                <span>Duration: {route.duration}</span>
-                <ul>
+              <div className="transit-leg-details">
+                <span className="transit-leg-duration">Duration: {route.duration}</span>
+                <ul className="transit-steps-list">
                   {route.steps.map((step, i) => (
-                    <li key={i} dangerouslySetInnerHTML={{ __html: step }} />
+                    <li key={i} className="transit-step" dangerouslySetInnerHTML={{ __html: step }} />
                   ))}
                 </ul>
-              </>
+              </div>
             )}
           </li>
         ))}
       </ul>
+      <button className="replan-btn" onClick={() => {
+        alert('Replan based on weather coming soon!');
+      }}>
+        Replan Based on Weather
+      </button>
     </div>
   );
 };
