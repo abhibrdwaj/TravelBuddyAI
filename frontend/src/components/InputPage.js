@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { FaMapMarkerAlt, FaWheelchair, FaUtensils, FaLeaf, FaHiking, FaMoneyBillWave } from 'react-icons/fa';
 import '../styles/InputPage.css';
 import LoadingScreen from './LoadingScreen';
 
@@ -6,7 +7,7 @@ const InputPage = ({ onPlanItinerary }) => {
     const [startLocation, setStartLocation] = useState('');
     const [endLocation, setEndLocation] = useState('');
     const [transportMode, setTransportMode] = useState(['subways']);
-    const [startTime, setStartTime] = useState(new Date().toISOString().slice(0, 16));
+    const [startTime, setStartTime] = useState(getLocalDateTimeString());
     const [endTime, setEndTime] = useState('');
     const [tripDuration, setTripDuration] = useState('');
     const [wheelchairAccessible, setWheelchairAccessible] = useState(false);
@@ -177,13 +178,16 @@ const InputPage = ({ onPlanItinerary }) => {
 
     return (
         <div className="input-page">
-            <h1>TravelBuddyAI</h1>
+            <h1 className="input-title">
+                <FaMapMarkerAlt className="branding-icon" /> TravelBuddyAI
+            </h1>
+            <h2 className="input-subheader">Your sustainable budget friendly Travel Assistant</h2>
             {loading ? (
                 <LoadingScreen />
             ) : (
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Start Location:
+                <form className="input-form-card" onSubmit={handleSubmit}>
+                    <div className="input-row">
+                        <label><FaMapMarkerAlt /> Start Location:</label>
                         <div className="location-input-container">
                             <input
                                 ref={startLocationRef}
@@ -192,26 +196,31 @@ const InputPage = ({ onPlanItinerary }) => {
                                 onChange={(e) => setStartLocation(e.target.value)}
                                 placeholder="Search for a location..."
                                 required
+                                className="input-text"
                             />
-                            <button type="button" onClick={handleGetLocation} className="location-btn">
-                                Use Current Location
-                            </button>
+                            <div className="tooltip-container">
+                                <button type="button" onClick={handleGetLocation} className="location-btn">
+                                    <FaMapMarkerAlt style={{ marginRight: 4 }} />
+                                </button>
+                                <span className="custom-tooltip">Use Current location (permission required)</span>
+                            </div>
                         </div>
-                    </label>
-                    <label>
-                        End Location:
+                    </div>
+                    <div className="input-row">
+                        <label><FaMapMarkerAlt /> End Location:</label>
                         <input
                             ref={endLocationRef}
                             type="text"
                             value={endLocation}
                             onChange={(e) => setEndLocation(e.target.value)}
                             placeholder="Search for destination..."
+                            className="input-text"
                         />
-                    </label>
-                    <label>
-                        Mode of Transport:
+                    </div>
+                    <div className="input-row">
+                        <label>Mode of Transport:</label>
                         <div className="transport-mode-container">
-                            {['subways', 'buses', 'taxis', 'e-bikes', 'walking'].map((mode) => (
+                            {['subways', 'buses', 'driving', 'cycling', 'walking'].map((mode) => (
                                 <label key={mode} className="checkbox-label">
                                     <input
                                         type="checkbox"
@@ -222,17 +231,18 @@ const InputPage = ({ onPlanItinerary }) => {
                                 </label>
                             ))}
                         </div>
-                    </label>
-                    <label>
-                        Start Time:
+                    </div>
+                    <div className="input-row">
+                        <label>Start Time:</label>
                         <input
                             type="datetime-local"
                             value={startTime}
                             onChange={(e) => setStartTime(e.target.value)}
+                            className="input-text"
                         />
-                    </label>
-                    <label>
-                        Trip Duration (in hours):
+                    </div>
+                    <div className="input-row">
+                        <label>Trip Duration (in hours):</label>
                         <input
                             type="number"
                             min="0"
@@ -240,65 +250,80 @@ const InputPage = ({ onPlanItinerary }) => {
                             value={tripDuration}
                             onChange={(e) => setTripDuration(e.target.value)}
                             placeholder="e.g. 2.5"
+                            className="input-text"
                         />
-                    </label>
-                    <label>
-                        End Time (optional):
+                    </div>
+                    <div className="input-row">
+                        <label>End Time (optional):</label>
                         <input
                             type="datetime-local"
                             value={endTime}
                             onChange={(e) => setEndTime(e.target.value)}
+                            className="input-text"
                         />
-                    </label>
-                    <label>
-                        Cuisines (optional):
+                    </div>
+                    <div className="input-row">
+                        <label><FaUtensils /> Cuisines (optional):</label>
                         <input
                             type="text"
                             value={cuisines}
                             onChange={(e) => setCuisines(e.target.value)}
                             placeholder="e.g. Italian, Chinese"
+                            className="input-text"
                         />
-                    </label>
-                    <label>
-                        Diet Preferences (optional):
+                    </div>
+                    <div className="input-row">
+                        <label><FaLeaf /> Diet Preferences (optional):</label>
                         <input
                             type="text"
                             value={dietPreferences}
                             onChange={(e) => setDietPreferences(e.target.value)}
                             placeholder="e.g. Vegetarian, Gluten-Free"
+                            className="input-text"
                         />
-                    </label>
-                    <label>
-                        Activity Preferences (optional):
+                    </div>
+                    <div className="input-row">
+                        <label><FaHiking /> Activity Preferences (optional):</label>
                         <input
                             type="text"
                             value={activityPreferences}
                             onChange={(e) => setActivityPreferences(e.target.value)}
                             placeholder="e.g. Sightseeing, Hiking"
+                            className="input-text"
                         />
-                    </label>
-                    <label>
-                        Budget Preferences (optional):
+                    </div>
+                    <div className="input-row">
+                        <label><FaMoneyBillWave /> Budget Preferences (optional):</label>
                         <input
                             type="text"
                             value={budgetPreferences}
                             onChange={(e) => setBudgetPreferences(e.target.value)}
                             placeholder="e.g. $100 - $300"
+                            className="input-text"
                         />
-                    </label>
-                    <label>
-                        Wheelchair Accessible:
+                    </div>
+                    <div className="input-row input-row-checkbox">
+                        <label><FaWheelchair /> Wheelchair Accessible:</label>
                         <input
                             type="checkbox"
                             checked={wheelchairAccessible}
                             onChange={(e) => setWheelchairAccessible(e.target.checked)}
                         />
-                    </label>
-                    <button type="submit">Plan Itinerary</button>
+                    </div>
+                    <div className="input-row">
+                        <button type="submit" className="input-submit-btn">Plan Itinerary</button>
+                    </div>
                 </form>
             )}
         </div>
     );
+};
+
+const getLocalDateTimeString = () => {
+    const now = new Date();
+    const tzOffset = now.getTimezoneOffset() * 60000;
+    const localISOTime = new Date(now - tzOffset).toISOString().slice(0, 16);
+    return localISOTime;
 };
 
 export default InputPage;
