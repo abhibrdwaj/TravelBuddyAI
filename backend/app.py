@@ -4,11 +4,16 @@ from event_planner import ( plan_trip, build_weather_overlay_by_place,
                            optimize_itinerary, build_crime_overlay_by_place
                         )
 import json
+from stream_tts import tts_app
+
+
 import pdb
 import os
 
 app = Flask(__name__)
 CORS(app)
+
+app.register_blueprint(tts_app, url_prefix='/tts')
 
 DATA_DIR = 'public'
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -26,8 +31,8 @@ def create_itinerary():
     crime_overlay = build_crime_overlay_by_place(json.dumps(data), base_plan)
 
     return {"base_plan": base_plan.model_dump(),
-            "weather_overlay": weather_overlay,
-            "crime_overlay": crime_overlay}, 200
+            "weather_overlay": None,
+            "crime_overlay": None}, 200
 
 @app.route('/api/replan', methods=['POST'])
 def replan_itinerary():
