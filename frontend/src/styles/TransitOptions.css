@@ -1,0 +1,169 @@
+/* Professional, modern transit options styles */
+.transit-options-container {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(44, 62, 80, 0.12);
+  padding: 32px 28px;
+  max-width: 540px;
+  width: 100%;
+  margin: 0 auto 32px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: fadeIn 0.5s;
+}
+.transit-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d3a4b;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.transit-modes-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.transit-modes-label {
+  font-size: 1rem;
+  color: #3a4a5d;
+  font-weight: 500;
+}
+.transit-modes-badges {
+  display: flex;
+  gap: 8px;
+}
+.transit-mode-badge {
+  background: #e0eafc;
+  color: #4a90e2;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 1rem;
+  box-shadow: 0 1px 4px rgba(80,227,194,0.08);
+  letter-spacing: 0.5px;
+}
+.transit-mode-none {
+  background: #f8d7da;
+  color: #c0392b;
+}
+.transit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.transit-leg-card {
+  background: #f7fafc;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 4px solid #4a90e2;
+}
+.transit-leg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.transit-leg-locations {
+  font-size: 1.08rem;
+  color: #2d3a4b;
+  font-weight: 600;
+}
+.transit-leg-arrow {
+  margin: 0 6px;
+  color: #4a90e2;
+  font-size: 1.2rem;
+}
+.transit-leg-mode {
+  background: #4a90e2;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 1rem;
+}
+.transit-leg-details {
+  font-size: 0.98rem;
+  color: #3a4a5d;
+  margin-top: 4px;
+}
+.transit-leg-duration {
+  font-weight: 500;
+  color: #27ae60;
+  margin-bottom: 4px;
+  display: block;
+}
+.transit-steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.transit-step {
+  background: #eaf6ff;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 0.97rem;
+  color: #2d3a4b;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.05);
+}
+.transit-error {
+  color: #c0392b;
+  font-weight: 600;
+  background: #f8d7da;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-top: 6px;
+}
+.transit-loading {
+  color: #4a90e2;
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+.replan-btn {
+  position: sticky;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: linear-gradient(90deg, #4a90e2 0%, #27ae60 100%);
+  color: #fff;
+  font-size: 1.08rem;
+  font-weight: 600;
+  padding: 12px 0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-top: 18px;
+  width: 100%;
+  display: block;
+}
+.replan-btn:hover {
+  background: linear-gradient(90deg, #27ae60 0%, #4a90e2 100%);
+  box-shadow: 0 4px 16px rgba(44, 62, 80, 0.12);
+}
+@media (max-width: 600px) {
+  .transit-options-container {
+    padding: 18px 8px;
+    border-radius: 10px;
+  }
+  .transit-title {
+    font-size: 1.4rem;
+  }
+  .transit-leg-card {
+    padding: 10px 6px;
+    border-radius: 8px;
+  }
+}

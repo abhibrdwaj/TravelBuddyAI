@@ -4,6 +4,7 @@ import LoadingScreen from './components/LoadingScreen';
 import ItineraryMap from './components/ItineraryMap';
 import TransitOptions from './components/TransitOptions';
 import dummyData from './dummy_itinerary.json';
+import TransitAndMapView from './components/TransitAndMapView';
 
 function App() {
   const [step, setStep] = useState('input');
@@ -26,10 +27,7 @@ function App() {
       {step === 'input' && <InputPage onPlanItinerary={handlePlanItinerary} />}
       {step === 'loading' && <LoadingScreen />}
       {step === 'map' && (
-        <>
-          <ItineraryMap transitModes={transitModes} />
-          <TransitOptions transitModes={transitModes} />
-        </>
+          <TransitAndMapView transitModes={transitModes} />
       )}
     </div>
   );
