@@ -14,6 +14,10 @@ def create_itinerary():
     end_time = data.get('end_time')
     trip_duration = data.get('trip_duration')
     wheelchair_accessible = data.get('wheelchair_accessible')
+    budget_preferences = data.get('budget_preferences')
+    diet_preferences = data.get('diet_preferences')
+    activity_preferences = data.get('activity_preferences')
+    cuisines = data.get('cuisines')
 
     # Here you would typically process the data and generate an itinerary
     # For now, we'll just return the received data as a confirmation
@@ -24,7 +28,11 @@ def create_itinerary():
         'start_time': start_time,
         'end_time': end_time,
         'trip_duration': trip_duration,
-        'wheelchair_accessible': wheelchair_accessible
+        'wheelchair_accessible': wheelchair_accessible,
+        'budget_preferences': budget_preferences,
+        'diet_preferences': diet_preferences,
+        'activity_preferences': activity_preferences,
+        'cuisines': cuisines
     }
 
     return jsonify(response), 200

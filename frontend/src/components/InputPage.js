@@ -14,6 +14,7 @@ const InputPage = ({ onPlanItinerary }) => {
     const [cuisines, setCuisines] = useState('');
     const [dietPreferences, setDietPreferences] = useState('');
     const [activityPreferences, setActivityPreferences] = useState('');
+    const [budgetPreferences, setBudgetPreferences] = useState('');
     
     const startLocationRef = useRef(null);
     const endLocationRef = useRef(null);
@@ -274,6 +275,15 @@ const InputPage = ({ onPlanItinerary }) => {
                             value={activityPreferences}
                             onChange={(e) => setActivityPreferences(e.target.value)}
                             placeholder="e.g. Sightseeing, Hiking"
+                        />
+                    </label>
+                    <label>
+                        Budget Preferences (optional):
+                        <input
+                            type="text"
+                            value={budgetPreferences}
+                            onChange={(e) => setBudgetPreferences(e.target.value)}
+                            placeholder="e.g. $100 - $300"
                         />
                     </label>
                     <label>
