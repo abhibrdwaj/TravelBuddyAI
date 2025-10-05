@@ -24,6 +24,7 @@ const InputPage = ({ onPlanItinerary }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        if (onPlanItinerary) onPlanItinerary('loading'); // Explicitly set loading step
         const data = {
             startLocation,
             endLocation,
@@ -35,24 +36,29 @@ const InputPage = ({ onPlanItinerary }) => {
             cuisines,
             dietPreferences,
             activityPreferences,
+            budgetPreferences
         };
 
-        const response = await fetch('http://127.0.0.1:5000/api/itinerary', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/itinerary', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
 
-        if (response.ok) {
-            const result = await response.json();
+            if (response.ok) {
+                const result = await response.json();
+                setLoading(false);
+                if (onPlanItinerary) onPlanItinerary('map', result); // Pass result to next step
+            } else {
+                setLoading(false);
+                console.error('Error:', response.statusText);
+            }
+        } catch (err) {
             setLoading(false);
-            console.log('Success:', result);
-            if (onPlanItinerary) onPlanItinerary();
-        } else {
-            setLoading(false);
-            console.error('Error:', response.statusText);
+            console.error('Network error:', err);
         }
     };
 

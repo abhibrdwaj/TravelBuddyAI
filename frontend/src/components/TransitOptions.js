@@ -1,10 +1,9 @@
 import React from 'react';
-import dummyData from '../dummy2.json';
 import useDirections from '../hooks/useDirections';
-import '../styles/TransitOptions.css';
+import '../styles/TransitOptions.css'; // IGNORE
 
-const TransitOptions = ({ transitModes }) => {
-  const directionsData = useDirections(dummyData.legs, transitModes);
+const TransitOptions = ({ transitModes, itineraryResult }) => {
+  const directionsData = useDirections(itineraryResult.base_plan.legs, transitModes);
 
   return (
     <div className="transit-options-container">

@@ -20,8 +20,8 @@ export default function useDirections(itinerary, transitModes) {
       for (let i = 0; i < itinerary.length - 1; i++) {
         const origin = itinerary[i].fromLocation;
         const destination = itinerary[i + 1].fromLocation;
-        if (itinerary[i].mode !== 'walking' && itinerary[i].mode !== 'subways') continue;
-        let travelMode = (itinerary[i].mode == 'walking') ? 'WALKING' : 'TRANSIT';
+        if (itinerary[i].mode !== 'walk' && itinerary[i].mode !== 'subway') continue;
+        let travelMode = (itinerary[i].mode == 'walk') ? 'WALKING' : 'TRANSIT';
         // Set drivingOptions with departureTime if available
         const drivingOptions = itinerary[i].departTime ? {
           departureTime: new Date(itinerary[i].departTime)
