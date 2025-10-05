@@ -7,6 +7,7 @@ function App() {
   const [step, setStep] = useState('input');
   const [transitModes, setTransitModes] = useState([]);
   const [itineraryResult, setItineraryResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const savedModes = JSON.parse(localStorage.getItem('transitModes'));
@@ -22,12 +23,28 @@ function App() {
     }
   };
 
+  const handleReplan = (result) => {
+    setLoading(false);
+    setItineraryResult(result.optimized || result); // Use optimized result if available
+    setStep('map');
+  };
+
+  const startReplanLoading = () => {
+    setLoading(true);
+    setStep('loading');
+  };
+
   return (
     <div className="App">
       {step === 'input' && <InputPage onPlanItinerary={handlePlanItinerary} />}
-      {step === 'loading' && <LoadingScreen />}
+      {(step === 'loading' || loading) && <LoadingScreen />}
       {step === 'map' && itineraryResult && (
-          <TransitAndMapView transitModes={transitModes} itineraryResult={itineraryResult} />
+        <TransitAndMapView
+          transitModes={transitModes}
+          itineraryResult={itineraryResult}
+          onReplan={handleReplan}
+          startReplanLoading={startReplanLoading}
+        />
       )}
     </div>
   );
