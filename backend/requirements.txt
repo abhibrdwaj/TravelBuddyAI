@@ -63,3 +63,6 @@ urllib3==2.5.0
 xxhash==3.6.0
 zstandard==0.25.0
 werkzeug==3.0.2
+requests
+python-dotenv
+elevenlabs
