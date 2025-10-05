@@ -4,6 +4,9 @@ from datetime import datetime, timedelta
 from pydantic import BaseModel, Field, field_validator, model_validator
 from dotenv import load_dotenv; load_dotenv()
 
+# Load NOMINATIM_UA from .env (or use default if not set)
+NOMINATIM_UA = os.getenv("NOMINATIM_UA", "trip-buddy/0.1 (contact: nair.gauthamvm@gmail.com)")
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 #Input schema validation
@@ -529,7 +532,7 @@ NYC_CRIME_BASE   = "https://data.cityofnewyork.us/resource"
 NYC_CRIME_DATASET = "5uac-w243"  # NYPD Complaint Data (Historic) - robust, but slightly laggy
 
 # ---- Geocoding (Nominatim) ----
-NOMINATIM_UA = os.getenv("NOMINATIM_UA", "trip-buddy/0.1 (contact: nair.gauthamvm@gmail.com)")
+## NOMINATIM_UA is now loaded at the top after load_dotenv
 _GEOCODE_CACHE: dict[str, Optional[Tuple[float, float]]] = {}
 
 def _geocode_nominatim(address: str, timeout=20) -> Optional[Tuple[float, float]]:
@@ -754,65 +757,5 @@ def build_crime_overlay_by_place(
         })
 
     return out
-
-
-#################################
-
-# if __name__ == "__main__":
-#     # 1) Build an initial plan
-#     sample = {
-#      "startLocation":"Times Square, New York, NY 10036, USA",
-#      "endLocation":"",
-#      "transportMode":["subways", "walk"],
-#      "startTime":"2025-10-04T08:08",
-#      "tripDuration":"10",
-#      "wheelchairAccessible":"false",
-#      "cuisines":"Italian, Chinese",
-#      "dietPreferences":"Vegeterian",
-#      "activityPreferences":"Sightseeing, Restaurants, Parks, Shopping",
-#      "budgetPreferences": "$50-100"
-#     }
-
-    
-#     print("Finding trips...")
-#     base_plan = plan_trip(json.dumps(sample))
-#     print(json.dumps(base_plan.model_dump()))
-
-#     ################################
-#     print("Pulling weather overlay (no schema changes to itinerary)...")
-#     weather_overlay = build_weather_overlay_by_place(json.dumps(sample), base_plan)
-
-#     print(json.dumps({
-#         "itinerary": base_plan.model_dump(),       # unchanged Node1 output
-#         "weatherOverlay": weather_overlay          # sidecar with weather per leg
-#     }, indent=2, default=str))
-#     ################################
-#     # 2) Optimization signals: rainy evening + budget cap + new user preferences
-#     signals = {
-#         "tripBudgetUSD": 50,
-#         "weather": weather_overlay,
-#         "user_notes": ["Prefer indoor museums"]
-#     }
-
-#     print("Pulling crime overlay (NYC Open Data NYPD YTD)...")
-#     crime_overlay = build_crime_overlay_by_place(json.dumps(sample), base_plan)
-
-#     print(json.dumps({
-#         "crimeOverlay": crime_overlay
-#     }, indent=2, default=str))
-
-
-#     print(f"Optimizing iternaries based on: {json.dumps(signals)}")
-
-#     optimized = optimize_itinerary(
-#         json.dumps(sample),
-#         json.dumps(base_plan.model_dump()),
-#         json.dumps(signals)
-#     )
-
-#     print("\n=== OPTIMIZATION CHANGES ===")
-#     print(json.dumps([c.model_dump() for c in optimized.changes], indent=2, default=str))
-#     print("\n=== OPTIMIZED ITINERARY ===")
-#     print(json.dumps(optimized.optimized.model_dump(), indent=2, default=str))
 
 
