@@ -1,10 +1,10 @@
 import React from 'react';
-import dummyData from '../dummy_itinerary.json';
+import dummyData from '../dummy2.json';
 import useDirections from '../hooks/useDirections';
 
 const TransitOptions = ({ transitModes }) => {
   // Fetch directions using the shared hook
-  const directionsData = useDirections(dummyData.itinerary, transitModes);
+  const directionsData = useDirections(dummyData.legs, transitModes);
 
   return (
     <div className="transit-options-container">

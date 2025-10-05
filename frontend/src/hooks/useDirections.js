@@ -18,25 +18,19 @@ export default function useDirections(itinerary, transitModes) {
       const directionsService = new window.google.maps.DirectionsService();
       const legs = [];
       for (let i = 0; i < itinerary.length - 1; i++) {
-        const origin = itinerary[i].location_name || itinerary[i].address;
-        const destination = itinerary[i + 1].location_name || itinerary[i + 1].address;
-        let mode = 'TRANSIT';
-        let transitOptions = {};
-        if (transitModes.includes('walking')) mode = 'WALKING';
-        else if (transitModes.includes('taxis')) mode = 'DRIVING';
-        else if (transitModes.includes('e-bikes')) mode = 'BICYCLING';
-        else if (transitModes.includes('subways') || transitModes.includes('buses')) {
-          mode = 'TRANSIT';
-          const modesArr = [];
-          if (transitModes.includes('subways')) modesArr.push(window.google.maps.TransitMode.SUBWAY);
-          if (transitModes.includes('buses')) modesArr.push(window.google.maps.TransitMode.BUS);
-          if (modesArr.length > 0) transitOptions.modes = modesArr;
-        }
+        const origin = itinerary[i].fromLocation;
+        const destination = itinerary[i + 1].fromLocation;
+        if (itinerary[i].mode !== 'walking' && itinerary[i].mode !== 'subways') continue;
+        let travelMode = (itinerary[i].mode == 'walking') ? 'WALKING' : 'TRANSIT';
         const request = {
           origin,
           destination,
-          travelMode: window.google.maps.TravelMode[mode],
-          ...(mode === 'TRANSIT' ? { transitOptions } : {})
+          travelMode: window.google.maps.TravelMode[travelMode],
+          ...(travelMode === 'TRANSIT' ? {
+            transitOptions: {
+              modes: [window.google.maps.TransitMode.SUBWAY]
+            }
+          } : {})
         };
         const getRoute = () => new Promise((resolve) => {
           directionsService.route(request, (result, status) => {
@@ -62,14 +56,14 @@ export default function useDirections(itinerary, transitModes) {
                 duration: summary.duration.text,
                 steps,
                 polyline: result.routes[0].overview_polyline,
-                transitMode: mode === 'TRANSIT' && transitOptions.modes ? transitOptions.modes.join(', ') : mode.toLowerCase(),
+                transitMode: travelMode,
                 startTime: summary.departure_time ? summary.departure_time.text : '',
                 endTime: summary.arrival_time ? summary.arrival_time.text : '',
                 distance: summary.distance ? summary.distance.text : '',
                 fare: result.routes[0].fare ? result.routes[0].fare.text : null
               });
             } else {
-              resolve({ origin, destination, error: 'No route found', transitMode: mode === 'TRANSIT' && transitOptions.modes ? transitOptions.modes.join(', ') : mode.toLowerCase() });
+              resolve({ origin, destination, error: 'No route found', transitMode: travelMode });
             }
           });
         });

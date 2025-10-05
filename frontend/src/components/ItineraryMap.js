@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/ItineraryMap.css';
-import dummyData from '../dummy_itinerary.json';
+import dummyData from '../dummy2.json';
 
 const GOOGLE_MAPS_API_KEY = 'AIzaSyBDnnTPHM5G7-HoKmR2-w1Mz_UBCn3cTBY'; // Replace with your key
 
@@ -11,7 +11,7 @@ const ItineraryMap = () => {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [scriptLoaded, setScriptLoaded] = useState(false);
-  const itinerary = dummyData.itinerary;
+  const itinerary = dummyData.legs;
 
   // Load Google Maps script if not already loaded
   useEffect(() => {
@@ -32,8 +32,8 @@ const ItineraryMap = () => {
 
     // Center on first location
     const center = {
-      lat: itinerary[0].latitude,
-      lng: itinerary[0].longitude,
+      lat: itinerary[0].fromLat,
+      lng: itinerary[0].fromLng,
     };
     const mapInstance = new window.google.maps.Map(mapRef.current, {
       zoom: 13,
@@ -43,82 +43,80 @@ const ItineraryMap = () => {
     });
 
     // Add markers and info windows
+    let i = 0;
     itinerary.forEach((item, idx) => {
-      const marker = new window.google.maps.Marker({
-        position: { lat: item.latitude, lng: item.longitude },
-        map: mapInstance,
-        label: `${idx + 1}`,
-        title: item.location_name,
-      });
-      const infoWindow = new window.google.maps.InfoWindow({
-        content: `<div><strong>${item.location_name}</strong><br/>${item.event_description}<br/><em>${item.event_type}</em><br/>${item.start_time} - ${item.end_time}</div>`
-      });
-      marker.addListener('click', () => infoWindow.open(mapInstance, marker));
+        if (item.fromLocation == item.toLocation) return;
+        const marker = new window.google.maps.Marker({
+            position: { lat: item.fromLat, lng: item.fromLng },
+            map: mapInstance,
+            label: `${i + 1}`,
+            title: item.fromLocation,
+        });
+        i++;
+        const infoWindow = new window.google.maps.InfoWindow({
+            content: `<div><strong>${item.fromLocation}</strong>`
+        });
+        marker.addListener('click', () => infoWindow.open(mapInstance, marker));
     });
 
     // Request and render transit directions for first leg
     for (let i = 0; i < itinerary.length - 1; i++) {
-      const origin = { lat: itinerary[i].latitude, lng: itinerary[i].longitude };
-      const destination = { lat: itinerary[i + 1].latitude, lng: itinerary[i + 1].longitude };
-      const ds = new window.google.maps.DirectionsService();
-      const dr = new window.google.maps.DirectionsRenderer({
-        map: mapInstance,
-        suppressMarkers: true,
-        preserveViewport: false,
-        polylineOptions: { strokeWeight: 6, strokeColor: '#4285F4' }
-      });
+        const origin = { lat: itinerary[i].fromLat, lng: itinerary[i].fromLng };
+        const destination = { lat: itinerary[i + 1].fromLat, lng: itinerary[i + 1].fromLng };
+        const ds = new window.google.maps.DirectionsService();
+        const dr = new window.google.maps.DirectionsRenderer({
+            map: mapInstance,
+            suppressMarkers: true,
+            preserveViewport: false,
+            polylineOptions: { strokeWeight: 6, strokeColor: '#4285F4' }
+        });
+      
+        if (itinerary[i].mode !== 'walking' && itinerary[i].mode !== 'subways') continue;
+        let travelMode = itinerary[i].mode == 'walking' ? 'WALKING' : 'TRANSIT';
 
-      ds.route(
-        {
-          origin,
-          destination,
-          travelMode: 'TRANSIT',
-          provideRouteAlternatives: true,
-          transitOptions: {
-            modes: [window.google.maps.TransitMode.SUBWAY],
-            routingPreference: window.google.maps.TransitRoutePreference.LESS_WALKING
-          }
+        ds.route(
+            {
+            origin,
+            destination,
+            travelMode: window.google.maps.TravelMode[travelMode],
+            ...(travelMode === 'TRANSIT' ? {
+            transitOptions: {
+                modes: [window.google.maps.TransitMode.SUBWAY]
+            }
+            } : {})
         },
-        (res, status) => {
-          if (status !== 'OK' || !res || !res.routes || !res.routes.length) return;
-          // Find a route that actually uses transit
-          const transitIdx = res.routes.findIndex(r =>
-            r.legs && r.legs.some(leg =>
-              leg.steps && leg.steps.some(s =>
-                s.travel_mode === 'TRANSIT' &&
-                (s.transit?.line?.vehicle?.type === 'SUBWAY' || s.transit?.line?.vehicle?.type === 'BUS')
-              )
-            )
-          );
-          const routeToShow = transitIdx >= 0 ? res.routes[transitIdx] : res.routes[0];
-          // Validate routeToShow structure
-          if (
-            routeToShow &&
-            Array.isArray(routeToShow.legs) &&
-            routeToShow.legs.length > 0 &&
-            routeToShow.legs.every(leg =>
-              Array.isArray(leg.steps) &&
-              leg.steps.every(s => typeof s.travel_mode === 'string')
-            )
-          ) {
-            dr.setDirections({
-              geocoded_waypoints: res.geocoded_waypoints,
-              routes: [routeToShow],
-              request: {
-                origin,
-                destination,
-                travelMode: window.google.maps.TravelMode.TRANSIT,
-                transitOptions: {
-                  modes: [window.google.maps.TransitMode.SUBWAY],
-                  routingPreference: window.google.maps.TransitRoutePreference.LESS_WALKING
+            (res, status) => {
+            if (status !== 'OK' || !res || !res.routes || !res.routes.length) return;
+            const routeToShow = res.routes[0];
+            // Validate routeToShow structure
+            if (
+                routeToShow &&
+                Array.isArray(routeToShow.legs) &&
+                routeToShow.legs.length > 0 &&
+                routeToShow.legs.every(leg =>
+                Array.isArray(leg.steps) &&
+                leg.steps.every(s => typeof s.travel_mode === 'string')
+                )
+            ) {
+                dr.setDirections({
+                geocoded_waypoints: res.geocoded_waypoints,
+                routes: [routeToShow],
+                request: {
+                    origin,
+                    destination,
+                    travelMode: travelMode,
+                    ...(travelMode === 'TRANSIT' ? {
+                    transitOptions: {
+                        modes: [window.google.maps.TransitMode.SUBWAY]
+                    }
+                    } : {})
                 }
-              }
-            });
-          } else {
-            console.error('Invalid route structure:', routeToShow);
-          }
-        }
-      );
+                });
+            } else {
+                console.error('Invalid route structure:', routeToShow);
+            }
+            }
+        );
     }
 
     setMap(mapInstance);

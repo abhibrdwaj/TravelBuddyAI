@@ -18,7 +18,7 @@ function App() {
     setStep('loading');
     setTimeout(() => {
       setStep('map');
-    }, 3000);
+    }, 1000);
   };
 
   return (
