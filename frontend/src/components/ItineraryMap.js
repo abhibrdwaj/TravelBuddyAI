@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+
 import '../styles/ItineraryMap.css';
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyBDnnTPHM5G7-HoKmR2-w1Mz_UBCn3cTBY'; // Replace with your key
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const ItineraryMap = ({ itineraryResult }) => {
   const mapRef = useRef(null);
