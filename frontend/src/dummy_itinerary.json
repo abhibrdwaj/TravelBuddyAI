@@ -1,43 +1,345 @@
 {
-  "itinerary": [
-    {
-      "location_name": "Bryant Park",
-      "address": "New York, NY 10018",
-      "latitude": 40.7536,
-      "longitude": -73.9832,
-      "start_time": "2025-10-04T19:00:00",
-      "end_time": "2025-10-04T20:00:00",
-      "event_type": "event",
-      "event_description": "Japanese food street happening today",
-      "news_source": "nycfoodnews.com",
-      "is_top_priority": true,
-      "is_alternate": false
+    "base_plan": {
+        "assumptions": [
+            "Assumed that 'Taste Good' can prepare suitable vegetarian Chinese dishes upon request, which is common for many Chinese restaurants. Confirmation upon arrival is highly recommended.",
+            "Assumed standard subway fare and museum admission costs.",
+            "Assumed a reasonable walking pace for a wheelchair user."
+        ],
+        "legs": [
+            {
+                "accessibilityNotes": "Times Sq-42 St station has elevator access to N/W platforms from street level (7th Ave and W 42nd St). 36 Av station is equipped with an elevator for wheelchair access.",
+                "arriveTime": "2025-10-04T08:55:00",
+                "choiceReasoning": "Chosen as a direct and wheelchair-accessible subway route to Astoria, close to the Museum of the Moving Image, aligning with the 'subways' transport mode and 'wheelchair accessible' preference.",
+                "costEstimateUSD": 2.9,
+                "departTime": "2025-10-04T08:15:00",
+                "estDurationMin": 40,
+                "fromLocation": "Times Square, New York, NY 10036, USA",
+                "mode": "subway",
+                "sequence": 1,
+                "toLocation": "36 Av Station, Astoria, NY 11106, USA"
+            },
+            {
+                "accessibilityNotes": "The walking route is approximately 0.5 miles on generally flat sidewalks. The museum itself is wheelchair accessible.",
+                "arriveTime": "2025-10-04T09:10:00",
+                "choiceReasoning": "Short, direct walk from the subway station to the museum, accommodating wheelchair accessibility.",
+                "costEstimateUSD": null,
+                "departTime": "2025-10-04T08:55:00",
+                "estDurationMin": 15,
+                "fromLocation": "36 Av Station, Astoria, NY 11106, USA",
+                "mode": "walk",
+                "sequence": 2,
+                "toLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA"
+            },
+            {
+                "accessibilityNotes": "All public areas of the Museum are wheelchair accessible, with elevators providing access to all floors.",
+                "arriveTime": "2025-10-04T10:55:00",
+                "choiceReasoning": "Selected as a highly-rated museum in Queens, aligning with the 'Museum' activity preference and confirmed wheelchair accessibility.",
+                "costEstimateUSD": 20.0,
+                "departTime": "2025-10-04T09:10:00",
+                "estDurationMin": 105,
+                "fromLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA",
+                "mode": "activity",
+                "sequence": 3,
+                "toLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA"
+            },
+            {
+                "accessibilityNotes": "Approximately 1 mile walk on sidewalks. Confirm restaurant entrance accessibility upon arrival.",
+                "arriveTime": "2025-10-04T11:15:00",
+                "choiceReasoning": "Walk to a nearby Chinese restaurant for lunch, minimizing travel time and adhering to wheelchair accessibility by preferring a walk over another subway ride for a short distance.",
+                "costEstimateUSD": null,
+                "departTime": "2025-10-04T10:55:00",
+                "estDurationMin": 20,
+                "fromLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA",
+                "mode": "walk",
+                "sequence": 4,
+                "toLocation": "Taste Good (Chinese Restaurant), 37-02 30th Ave, Astoria, NY 11103, USA"
+            },
+            {
+                "accessibilityNotes": "Restaurant entrance is generally wheelchair accessible. Interior seating arrangements may vary, but staff are typically accommodating.",
+                "arriveTime": "2025-10-04T12:15:00",
+                "choiceReasoning": "Chosen for 'Chinese' cuisine preference and proximity to the museum. While not exclusively vegetarian, many Chinese restaurants can prepare suitable dishes. It is crucial to confirm 'Vegetarian' options with the restaurant staff upon arrival to ensure dietary restrictions are met.",
+                "costEstimateUSD": 25.0,
+                "departTime": "2025-10-04T11:15:00",
+                "estDurationMin": 60,
+                "fromLocation": "Taste Good (Chinese Restaurant), 37-02 30th Ave, Astoria, NY 11103, USA",
+                "mode": "activity",
+                "sequence": 5,
+                "toLocation": "Taste Good (Chinese Restaurant), 37-02 30th Ave, Astoria, NY 11103, USA"
+            }
+        ],
+        "summary": "A wheelchair-accessible cultural and culinary tour of Astoria, Queens, focusing on a museum visit and vegetarian Chinese lunch, utilizing subway and short walks.",
+        "totalEstCostUSD": 47.9,
+        "totalEstDurationMin": 240
     },
-    {
-      "location_name": "Empire State Building",
-      "address": "20 W 34th St, New York, NY 10001",
-      "latitude": 40.7484,
-      "longitude": -73.9857,
-      "start_time": "2025-10-04T20:30:00",
-      "end_time": "2025-10-04T21:30:00",
-      "event_type": "attraction",
-      "event_description": "Night view special event",
-      "news_source": "nycevents.com",
-      "is_top_priority": false,
-      "is_alternate": true
+    "crime_overlay": {
+        "legCrime": [
+            {
+                "fromCrime": {
+                    "count": 1649,
+                    "radius_m": 400,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [
+                        {
+                            "count": 411,
+                            "offense": "PETIT LARCENY"
+                        },
+                        {
+                            "count": 192,
+                            "offense": "OTHER OFFENSES RELATED TO THEFT"
+                        },
+                        {
+                            "count": 153,
+                            "offense": "ASSAULT 3 & RELATED OFFENSES"
+                        },
+                        {
+                            "count": 126,
+                            "offense": "HARRASSMENT 2"
+                        },
+                        {
+                            "count": 116,
+                            "offense": "GRAND LARCENY"
+                        }
+                    ],
+                    "window": "2025-04-07..2025-10-04"
+                },
+                "fromLocation": "Times Square, New York, NY 10036, USA",
+                "sequence": 1,
+                "toCrime": {
+                    "count": null,
+                    "note": "Geocoding failed; cannot compute nearby stats.",
+                    "radius_m": 1200,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [],
+                    "window": "2025-10-04..2025-10-04"
+                },
+                "toLocation": "36 Av Station, Astoria, NY 11106, USA"
+            },
+            {
+                "fromCrime": {
+                    "count": null,
+                    "note": "Geocoding failed; cannot compute nearby stats.",
+                    "radius_m": 1200,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [],
+                    "window": "2025-10-04..2025-10-04"
+                },
+                "fromLocation": "36 Av Station, Astoria, NY 11106, USA",
+                "sequence": 2,
+                "toCrime": {
+                    "count": null,
+                    "note": "Geocoding failed; cannot compute nearby stats.",
+                    "radius_m": 1200,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [],
+                    "window": "2025-10-04..2025-10-04"
+                },
+                "toLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA"
+            },
+            {
+                "fromCrime": {
+                    "count": null,
+                    "note": "Geocoding failed; cannot compute nearby stats.",
+                    "radius_m": 1200,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [],
+                    "window": "2025-10-04..2025-10-04"
+                },
+                "fromLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA",
+                "sequence": 3,
+                "toCrime": {
+                    "count": null,
+                    "note": "Geocoding failed; cannot compute nearby stats.",
+                    "radius_m": 1200,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [],
+                    "window": "2025-10-04..2025-10-04"
+                },
+                "toLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA"
+            },
+            {
+                "fromCrime": {
+                    "count": null,
+                    "note": "Geocoding failed; cannot compute nearby stats.",
+                    "radius_m": 1200,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [],
+                    "window": "2025-10-04..2025-10-04"
+                },
+                "fromLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA",
+                "sequence": 4,
+                "toCrime": {
+                    "count": null,
+                    "note": "Geocoding failed; cannot compute nearby stats.",
+                    "radius_m": 1200,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [],
+                    "window": "2025-10-04..2025-10-04"
+                },
+                "toLocation": "Taste Good (Chinese Restaurant), 37-02 30th Ave, Astoria, NY 11103, USA"
+            },
+            {
+                "fromCrime": {
+                    "count": null,
+                    "note": "Geocoding failed; cannot compute nearby stats.",
+                    "radius_m": 1200,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [],
+                    "window": "2025-10-04..2025-10-04"
+                },
+                "fromLocation": "Taste Good (Chinese Restaurant), 37-02 30th Ave, Astoria, NY 11103, USA",
+                "sequence": 5,
+                "toCrime": {
+                    "count": null,
+                    "note": "Geocoding failed; cannot compute nearby stats.",
+                    "radius_m": 1200,
+                    "source": "NYC Open Data NYPD 5uac-w243",
+                    "top_offenses": [],
+                    "window": "2025-10-04..2025-10-04"
+                },
+                "toLocation": "Taste Good (Chinese Restaurant), 37-02 30th Ave, Astoria, NY 11103, USA"
+            }
+        ],
+        "params": {
+            "lookback_days_default": 45,
+            "radius_seq": [
+                400,
+                800,
+                1200
+            ],
+            "widen_steps": [
+                45,
+                180,
+                365
+            ]
+        }
     },
-    {
-      "location_name": "Wall Street",
-      "address": "Wall St, New York, NY 10005",
-      "latitude": 40.7075,
-      "longitude": -74.0113,
-      "start_time": "2025-10-04T22:00:00",
-      "end_time": "2025-10-04T23:00:00",
-      "event_type": "landmark",
-      "event_description": "Historic financial district walk",
-      "news_source": "nycwalks.com",
-      "is_top_priority": false,
-      "is_alternate": false
+    "weather_overlay": {
+        "legWeather": [
+            {
+                "arriveTime": "2025-10-04T08:55:00",
+                "arriveWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 72,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 11.96,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 1.82
+                },
+                "departTime": "2025-10-04T08:15:00",
+                "departWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 65,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 24.44,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 4.92
+                },
+                "fromLocation": "Times Square, New York, NY 10036, USA",
+                "sequence": 1,
+                "toLocation": "36 Av Station, Astoria, NY 11106, USA"
+            },
+            {
+                "arriveTime": "2025-10-04T09:10:00",
+                "arriveWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 72,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 11.96,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 1.82
+                },
+                "departTime": "2025-10-04T08:55:00",
+                "departWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 72,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 11.96,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 1.82
+                },
+                "fromLocation": "36 Av Station, Astoria, NY 11106, USA",
+                "sequence": 2,
+                "toLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA"
+            },
+            {
+                "arriveTime": "2025-10-04T10:55:00",
+                "arriveWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 72,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 11.96,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 1.82
+                },
+                "departTime": "2025-10-04T09:10:00",
+                "departWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 72,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 11.96,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 1.82
+                },
+                "fromLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA",
+                "sequence": 3,
+                "toLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA"
+            },
+            {
+                "arriveTime": "2025-10-04T11:15:00",
+                "arriveWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 72,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 11.96,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 1.82
+                },
+                "departTime": "2025-10-04T10:55:00",
+                "departWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 72,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 11.96,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 1.82
+                },
+                "fromLocation": "Museum of the Moving Image, 36-01 35th Ave, Astoria, NY 11106, USA",
+                "sequence": 4,
+                "toLocation": "Taste Good (Chinese Restaurant), 37-02 30th Ave, Astoria, NY 11103, USA"
+            },
+            {
+                "arriveTime": "2025-10-04T12:15:00",
+                "arriveWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 72,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 11.96,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 1.82
+                },
+                "departTime": "2025-10-04T11:15:00",
+                "departWeather": {
+                    "condition": "Clear Sky",
+                    "humidity_pct": 72,
+                    "icon": "01d",
+                    "source": "openweathermap:q",
+                    "temp_c": 11.96,
+                    "time": "2025-10-07T14:00:00",
+                    "wind_mps": 1.82
+                },
+                "fromLocation": "Taste Good (Chinese Restaurant), 37-02 30th Ave, Astoria, NY 11103, USA",
+                "sequence": 5,
+                "toLocation": "Taste Good (Chinese Restaurant), 37-02 30th Ave, Astoria, NY 11103, USA"
+            }
+        ]
     }
-  ]
 }

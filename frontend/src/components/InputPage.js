@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaMapMarkerAlt, FaWheelchair, FaUtensils, FaLeaf, FaHiking, FaMoneyBillWave } from 'react-icons/fa';
 import '../styles/InputPage.css';
 import LoadingScreen from './LoadingScreen';
+import dummyItinerary from '../dummy_itinerary.json';
 
 const InputPage = ({ onPlanItinerary }) => {
     const [startLocation, setStartLocation] = useState('');
@@ -40,25 +41,12 @@ const InputPage = ({ onPlanItinerary }) => {
         };
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/itinerary', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                setLoading(false);
-                if (onPlanItinerary) onPlanItinerary('map', result); // Pass result to next step
-            } else {
-                setLoading(false);
-                console.error('Error:', response.statusText);
-            }
+            // Mock: Load from dummy_itinerary.json instead of backend
+            setLoading(false);
+            if (onPlanItinerary) onPlanItinerary('map', dummyItinerary);
         } catch (err) {
             setLoading(false);
-            console.error('Network error:', err);
+            console.error('Mock network error:', err);
         }
     };
 
