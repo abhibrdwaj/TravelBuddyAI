@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ItineraryMap from './ItineraryMap';
 import TransitOptions from './TransitOptions';
-import '../styles/TransitAndMapView.css';
+import '../../styles/map-viewer/TransitAndMapView.css';
 
 const TransitAndMapView = ({ transitModes, itineraryResult, onReplan, startReplanLoading }) => {
   const [optimizeWeather, setOptimizeWeather] = useState(false);

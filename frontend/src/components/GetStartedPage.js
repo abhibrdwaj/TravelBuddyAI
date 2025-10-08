@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import InputPage from './InputPage';
 import LoadingScreen from './LoadingScreen';
-import TransitAndMapView from './TransitAndMapView';
+import TransitAndMapView from './map-viewer/TransitAndMapView';
 
 const GetStartedPage = () => {
   const [step, setStep] = useState('input');
