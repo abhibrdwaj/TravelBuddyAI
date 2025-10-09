@@ -1,6 +1,6 @@
 import React from 'react';
-import useDirections from '../hooks/useDirections';
-import '../styles/TransitOptions.css'; // IGNORE
+import useDirections from '../../hooks/useDirections';
+import '../../styles/map-viewer/TransitOptions.css'; // IGNORE
 
 const TransitOptions = ({ transitModes, itineraryResult }) => {
   const directionsData = useDirections(itineraryResult.base_plan.legs, transitModes);
